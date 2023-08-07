@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "747343795053",
+    "project_id": "safebite-d87bb",
+    "storage_bucket": "safebite-d87bb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:747343795053:android:81cde8ef737f0fb8974064",
+        "android_client_info": {
+          "package_name": "com.example.safe_bite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "747343795053-cpma96iej6031lt90guqd22q7t3o2osf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAbaO2VaWJzXcKOShzfMQTipajpPK2FMKg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "747343795053-cpma96iej6031lt90guqd22q7t3o2osf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
