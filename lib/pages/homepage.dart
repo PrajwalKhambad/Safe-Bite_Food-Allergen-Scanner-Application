@@ -83,7 +83,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Container(height: 150,),
               ElevatedButton(onPressed: (){
-                Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const LoginPage()));
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context) => const LoginForm()));
               }, 
               child: Text("HomePage"),
               style: customElevatedButtonStyle(double.infinity, 30),

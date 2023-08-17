@@ -17,6 +17,21 @@ ButtonStyle customElevatedButtonStyle(double width, double height){
   );
 }
 
+// Text Field style for profile fill page
+InputDecoration customTextFieldStyle(String label){
+  return InputDecoration(
+    labelText: label,
+    hintText: "Enter your $label",
+    contentPadding:const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
+    border: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(8),
+      borderSide:const BorderSide(color: Colors.grey),
+    ),
+    filled: true,
+    fillColor: Colors.grey.shade200,
+  );
+}
+
 // Text style theme for appbar text only
 TextStyle customTextStyle_appbar = const TextStyle(
   fontSize: 20.0,
