@@ -20,16 +20,12 @@ class _Profile_FormState extends State<Profile_Form> {
   String _surname = "";
   int _age = 0;
   String _gender = "";
+
   final List<String> _allergies = [];
+  final List<String> _commonAllergies = ['Peanuts','Milk','Eggs','Wheat','Soy'];
 
   final List<String> _dietaryPref = [];
-  final List<String> _dietarySuggestions = [
-    'Vegetarian',
-    'Vegan',
-    'Gluten-free',
-    'Low-carb',
-    'Paleo'
-  ];
+  final List<String> _dietarySuggestions = ['Vegetarian','Vegan','Gluten-free','Low-carb','Paleo'];
 
   // String _medicalConditions = "";
   // String _prefCuisines = "";
@@ -55,7 +51,6 @@ class _Profile_FormState extends State<Profile_Form> {
           // 'PicUrl' : _profilePicUrl,
         });
 
-        // Navigate to the next screen
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
           return HomePage();
@@ -76,139 +71,166 @@ class _Profile_FormState extends State<Profile_Form> {
           key: _formKey,
           child: ListView(
             children: [
-              TextFormField(
-                decoration: customTextFieldStyle('Name'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your name";
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _iniName = value!;
-                },
+              const SizedBox(
+                height: 5,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      decoration: customTextFieldStyle('Name'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your name";
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _iniName = value!;
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: customTextFieldStyle('Surname'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your surname";
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _surname = value!;
+                      },
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
-                height: 18,
+                height: 30,
               ),
-              TextFormField(
-                decoration: customTextFieldStyle('Surname'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your surname";
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _surname = value!;
-                },
-              ),
-              const SizedBox(
-                height: 18,
-              ),
-              TextFormField(
-                keyboardType: TextInputType.number,
-                decoration: customTextFieldStyle('Age'),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Please enter your age";
-                  }
-                  return null;
-                },
-                onSaved: (value) {
-                  _age = int.parse(value!);
-                },
-              ),
-              const SizedBox(
-                height: 18,
-              ),
-              ListTile(
-                title: const Text("Gender"),
-                trailing: DropdownButton<String>(
-                  hint: Text("Select gender"),
-                  value: _gender,
-                  onChanged: (value) {
-                    setState(() {
-                      _gender = value!;
-                    });
-                  },
-                  items: ["", "Male", "Female", "Other"]
-                      .map<DropdownMenuItem<String>>(
-                        (String value) => DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        ),
-                      )
-                      .toList(),
-                ),
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      keyboardType: TextInputType.number,
+                      decoration: customTextFieldStyle('Age'),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return "Please enter your age";
+                        }
+                        return null;
+                      },
+                      onSaved: (value) {
+                        _age = int.parse(value!);
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 25,
+                  ),
+                  Expanded(
+                    child: ListTile(
+                      title: const Text("Gender"),
+                      trailing: DropdownButton<String>(
+                        hint: Text("Select gender"),
+                        value: _gender,
+                        onChanged: (value) {
+                          setState(() {
+                            _gender = value!;
+                          });
+                        },
+                        items: ["", "Male", "Female", "Other"]
+                            .map<DropdownMenuItem<String>>(
+                              (String value) => DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
-                height: 25,
+                height: 30,
               ),
+              Text(" Allergies", style: customTextStyle_normal,),
+              const SizedBox(height: 5,),
               Wrap(
+                runSpacing: 4,
                 spacing: 8,
-                // runSpacing: 4,
-                children: _allergies.map((allergy) {
-                  return Chip(
+                children: _commonAllergies.map((allergy) {
+                  bool isSelected = _allergies.contains(allergy);
+                  return ChoiceChip(
+                    selectedColor: Color.fromARGB(255, 134, 176, 211),
                     label: Text(allergy),
-                    onDeleted: () => _removeAllergy(allergy),
+                    selected: isSelected,
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _allergies.add(allergy);
+                        } else {
+                          _allergies.remove(allergy);
+                        }
+                      });
+                    },
                   );
                 }).toList(),
               ),
               const SizedBox(
-                height: 5,
+                height: 10,
               ),
-              TextFormField(
-                controller: _allergyController,
-                decoration: customTextFieldStyle('Allergies'),
-                onFieldSubmitted: _addAllergy,
+              ListTile(
+                shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
+                leading: Icon(Icons.add),
+                title: Text("Other"),
+                onTap: () {
+                  _showCustomDialog(title: "Add Allergy", labelText: "Allergy Name", listToUpdate: _allergies, suggestionList: _commonAllergies);
+                },
               ),
               const SizedBox(
-                height: 18,
+                height: 20,
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Dietary Preferences"),
-                  Wrap(
-                    spacing: 8,
-                    children: _dietaryPref.map((preference) {
-                      return Chip(
-                        label: Text(preference),
-                        onDeleted: () => _removeDietaryPreference(preference),
-                      );
-                    }).toList(),
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  TextFormField(
-                    decoration: customTextFieldStyle('Dietary Preferences'),
-                    onFieldSubmitted: (value) {
-                      if (value.isNotEmpty) {
-                        _addDietaryPreference(value);
-                      }
+              Text(" Dietary Preferences", style: customTextStyle_normal,),
+              const SizedBox(height: 5,),
+              Wrap(
+                runSpacing: 8,
+                spacing: 8,
+                children: _dietarySuggestions.map((preference){
+                  bool isPrefSel = _dietaryPref.contains(preference);
+                  return ChoiceChip(
+                    selectedColor: Color.fromARGB(255, 134, 176, 211),
+                    label: Text(preference),
+                    selected: isPrefSel,
+                    onSelected: (selected){
+                      setState(() {
+                        if(selected){
+                          _dietaryPref.add(preference);
+                        } else {
+                          _dietaryPref.remove(preference);
+                        }
+                      });
                     },
-                  ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Wrap(
-                    spacing: 8,
-                    children: _dietarySuggestions.map((suggestion) {
-                      return InputChip(
-                        label: Text(suggestion),
-                        onPressed: () => _addDietaryPreference(suggestion),
-                      );
-                    }).toList(),
-                  ),
-                ],
+                  );
+                }).toList(),
               ),
-
+              const SizedBox(height: 10,),
+              ListTile(
+                shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
+                leading: Icon(Icons.add),
+                title: Text("Other"),
+                onTap: (){
+                  _showCustomDialog(title: "Add Dietary Preference",labelText: "Dietary Preference",listToUpdate: _dietaryPref, suggestionList: _dietarySuggestions);
+                },
+              ),
               // Implement medical conditions, pref cuisines and profile pic url here if required
-
               const SizedBox(
-                height: 8,
+                height: 20,
               ),
               ElevatedButton(
                   style: customElevatedButtonStyle(140, 40),
@@ -220,33 +242,40 @@ class _Profile_FormState extends State<Profile_Form> {
       ),
     );
   }
-
-  final TextEditingController _allergyController = TextEditingController();
-
-  void _addAllergy(String allergy) {
-    if (allergy.isNotEmpty) {
-      setState(() {
-        _allergies.add(allergy);
-        _allergyController.clear();
-      });
-    }
-  }
-
-  void _removeAllergy(String allergy) {
-    setState(() {
-      _allergies.remove(allergy);
-    });
-  }
-
-  void _addDietaryPreference(String preference) {
-    setState(() {
-      _dietaryPref.add(preference);
-    });
-  }
-
-  void _removeDietaryPreference(String preference) {
-    setState(() {
-      _dietaryPref.remove(preference);
-    });
-  }
+  
+  void _showCustomDialog({required String title,required String labelText,required List<String> listToUpdate, required List<String> suggestionList}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      String customValue = '';
+      return AlertDialog(
+        title: Text(title),
+        content: TextField(
+          onChanged: (value) {
+            customValue = value;
+          },
+          decoration: InputDecoration(labelText: labelText),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              setState(() {
+                listToUpdate.add(customValue);
+                suggestionList.add(customValue);                
+              });
+              Navigator.pop(context);
+            },
+            child: Text('Add'),
+          ),
+        ],
+      );
+    },
+  );
+}
 }

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safe_bite/firebase_methods/firebase_auth_method.dart';
 import 'package:safe_bite/pages/homepage.dart';
@@ -17,6 +18,19 @@ class _LoginFormState extends State<LoginForm> {
   bool isLoading = false;
   bool login = false;
   String error = "";
+
+  @override
+  void initState() {
+    super.initState();
+    //  autologin
+    FirebaseAuth.instance.authStateChanges().listen((User? user){
+      if(user != null){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
+          return HomePage();
+        }));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {

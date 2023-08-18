@@ -1,7 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:safe_bite/pages/display_profile_page.dart';
+import 'package:safe_bite/pages/homepage.dart';
 import 'package:safe_bite/pages/profile_form_page.dart';
+import 'package:safe_bite/pages/update_profile.dart';
 import 'themes.dart';
 import 'pages/login_screen.dart';
 
@@ -20,8 +23,7 @@ Future main() async{
 
   runApp( 
     MaterialApp(
-    // home:const LoginForm(),
-    // home: Profile_Form(),
+    home: LoginForm(),
     debugShowCheckedModeBanner: false,
     theme: AppTheme.theme,
     ));
