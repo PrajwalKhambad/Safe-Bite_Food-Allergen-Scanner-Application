@@ -21,12 +21,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
           onPressed: () {
             Navigator.pop(context);
           },
-          icon: Icon(Icons.arrow_back),
+          icon: Icon(Icons.arrow_back_ios_new_rounded),
         ),
       ),
       body: SingleChildScrollView(
         child: Container(
-          padding: EdgeInsets.all(10),
+          height: MediaQuery.of(context).size.height,
+          color: customBackgroundColor,
+          padding: EdgeInsets.symmetric(vertical:5, horizontal: 20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -37,7 +39,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     height: 120,
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(100),
-                        child: const CircleAvatar()),
+                        child: const CircleAvatar(backgroundColor: Color(0xFF91C8E4),)),
                   ),
                   Positioned(
                     bottom: 0,
@@ -48,7 +50,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(100),
                           color: Colors.orange),
-                      child: const Icon(Icons.camera,
+                      child: const Icon(Icons.camera_alt,
                           color: Colors.black, size: 20),
                     ),
                   ),
@@ -142,14 +144,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     Text(
                       " Existing Allergies: $allergies",
-                      style: customTextStyle_normal,
+                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     ListTile(
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 1),
+                          side: BorderSide(width: 1, color: Colors.black),
                           borderRadius: BorderRadius.circular(20)),
                       leading: Icon(Icons.add),
                       title: Text("Other"),
@@ -166,14 +168,14 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                     ),
                     Text(
                       "Existing Dietary Preferences: $dietaryPref",
-                      style: customTextStyle_normal,
+                      style: TextStyle(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(
                       height: 10,
                     ),
                     ListTile(
                       shape: RoundedRectangleBorder(
-                          side: BorderSide(width: 1),
+                          side: BorderSide(width: 1, color: Colors.black),
                           borderRadius: BorderRadius.circular(20)),
                       leading: Icon(Icons.add),
                       title: Text("Other"),
@@ -186,7 +188,7 @@ class _UpdateProfileScreenState extends State<UpdateProfileScreen> {
                       },
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 15,
                     ),
                     ElevatedButton(
                         style: customElevatedButtonStyle(140, 40),

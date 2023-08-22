@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 // background Color
-Color customBackgroundColor = Color.fromARGB(255, 170, 200, 223);
+Color customBackgroundColor =const Color(0xFFF6F4EB);
 
 // Button style
 ButtonStyle customElevatedButtonStyle(double width, double height){
   return ElevatedButton.styleFrom(
-    backgroundColor: Colors.orange,
+    backgroundColor: Color(0xFF749BC2),
     foregroundColor: Colors.white,
     elevation: 8,
     padding:const EdgeInsets.symmetric(horizontal: 16),
@@ -25,10 +25,10 @@ InputDecoration customTextFieldStyle(String label){
     contentPadding:const EdgeInsets.symmetric(vertical: 10, horizontal: 16),
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(8),
-      borderSide:const BorderSide(color: Colors.grey),
+      borderSide:const BorderSide(color: Colors.black),
     ),
     filled: true,
-    fillColor: Colors.grey.shade200,
+    fillColor: Colors.grey.shade300,
   );
 }
 
@@ -36,26 +36,24 @@ InputDecoration customTextFieldStyle(String label){
 TextStyle customTextStyle_appbar = const TextStyle(
   fontSize: 20.0,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Color(0xFFF6F4EB),
 );
 
 // Text style theme
-TextStyle customTextStyle_normal = const TextStyle(
-  fontSize: 20.0,
+TextStyle customTextStyle_normal = TextStyle(
+  fontSize: 15,
   fontWeight: FontWeight.bold,
-  color: Colors.black,
+  color: Color(0xFFF6F4EB),
 );
+
 
 // appbar theme
 class AppTheme{
   static final ThemeData theme = ThemeData(
     appBarTheme:const AppBarTheme(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.black,
+      backgroundColor: Color(0xFF4682A9),
+      foregroundColor: Color(0xFFF6F4EB),
       elevation: 8,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))
-      ),
       centerTitle: true
     ),
   );

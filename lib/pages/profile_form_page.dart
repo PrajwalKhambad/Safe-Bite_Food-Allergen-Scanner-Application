@@ -65,178 +65,181 @@ class _Profile_FormState extends State<Profile_Form> {
       appBar: AppBar(
         title: const Text("Fill Profile"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Form(
-          key: _formKey,
-          child: ListView(
-            children: [
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      decoration: customTextFieldStyle('Name'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your name";
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _iniName = value!;
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  Expanded(
-                    child: TextFormField(
-                      decoration: customTextFieldStyle('Surname'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your surname";
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _surname = value!;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      keyboardType: TextInputType.number,
-                      decoration: customTextFieldStyle('Age'),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Please enter your age";
-                        }
-                        return null;
-                      },
-                      onSaved: (value) {
-                        _age = int.parse(value!);
-                      },
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 25,
-                  ),
-                  Expanded(
-                    child: ListTile(
-                      title: const Text("Gender"),
-                      trailing: DropdownButton<String>(
-                        hint: Text("Select gender"),
-                        value: _gender,
-                        onChanged: (value) {
-                          setState(() {
-                            _gender = value!;
-                          });
+      body: Container(
+        color: customBackgroundColor,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Form(
+            key: _formKey,
+            child: ListView(
+              children: [
+                const SizedBox(
+                  height: 5,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        decoration: customTextFieldStyle('Name'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your name";
+                          }
+                          return null;
                         },
-                        items: ["", "Male", "Female", "Other"]
-                            .map<DropdownMenuItem<String>>(
-                              (String value) => DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              ),
-                            )
-                            .toList(),
+                        onSaved: (value) {
+                          _iniName = value!;
+                        },
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 30,
-              ),
-              Text(" Allergies", style: customTextStyle_normal,),
-              const SizedBox(height: 5,),
-              Wrap(
-                runSpacing: 4,
-                spacing: 8,
-                children: _commonAllergies.map((allergy) {
-                  bool isSelected = _allergies.contains(allergy);
-                  return ChoiceChip(
-                    selectedColor: Color.fromARGB(255, 134, 176, 211),
-                    label: Text(allergy),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _allergies.add(allergy);
-                        } else {
-                          _allergies.remove(allergy);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ListTile(
-                shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
-                leading: Icon(Icons.add),
-                title: Text("Other"),
-                onTap: () {
-                  _showCustomDialog(title: "Add Allergy", labelText: "Allergy Name", listToUpdate: _allergies, suggestionList: _commonAllergies);
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Text(" Dietary Preferences", style: customTextStyle_normal,),
-              const SizedBox(height: 5,),
-              Wrap(
-                runSpacing: 8,
-                spacing: 8,
-                children: _dietarySuggestions.map((preference){
-                  bool isPrefSel = _dietaryPref.contains(preference);
-                  return ChoiceChip(
-                    selectedColor: Color.fromARGB(255, 134, 176, 211),
-                    label: Text(preference),
-                    selected: isPrefSel,
-                    onSelected: (selected){
-                      setState(() {
-                        if(selected){
-                          _dietaryPref.add(preference);
-                        } else {
-                          _dietaryPref.remove(preference);
-                        }
-                      });
-                    },
-                  );
-                }).toList(),
-              ),
-              const SizedBox(height: 10,),
-              ListTile(
-                shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
-                leading: Icon(Icons.add),
-                title: Text("Other"),
-                onTap: (){
-                  _showCustomDialog(title: "Add Dietary Preference",labelText: "Dietary Preference",listToUpdate: _dietaryPref, suggestionList: _dietarySuggestions);
-                },
-              ),
-              // Implement medical conditions, pref cuisines and profile pic url here if required
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                  style: customElevatedButtonStyle(140, 40),
-                  onPressed: _submitForm,
-                  child: const Text("Submit")),
-            ],
+                    const SizedBox(
+                      width: 25,
+                    ),
+                    Expanded(
+                      child: TextFormField(
+                        decoration: customTextFieldStyle('Surname'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your surname";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _surname = value!;
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextFormField(
+                        keyboardType: TextInputType.number,
+                        decoration: customTextFieldStyle('Age'),
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return "Please enter your age";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {
+                          _age = int.parse(value!);
+                        },
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 25,
+                    ),
+                    Expanded(
+                      child: ListTile(
+                        title: const Text("Gender"),
+                        trailing: DropdownButton<String>(
+                          hint: Text("Select gender"),
+                          value: _gender,
+                          onChanged: (value) {
+                            setState(() {
+                              _gender = value!;
+                            });
+                          },
+                          items: ["", "Male", "Female", "Other"]
+                              .map<DropdownMenuItem<String>>(
+                                (String value) => DropdownMenuItem<String>(
+                                  value: value,
+                                  child: Text(value),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text("  Allergies", style: TextStyle(color: Colors.black, fontSize: 15),),
+                const SizedBox(height: 9,),
+                Wrap(
+                  runSpacing: 4,
+                  spacing: 8,
+                  children: _commonAllergies.map((allergy) {
+                    bool isSelected = _allergies.contains(allergy);
+                    return ChoiceChip(
+                      selectedColor: Color(0xFF749BC2),
+                      label: Text(allergy),
+                      selected: isSelected,
+                      onSelected: (selected) {
+                        setState(() {
+                          if (selected) {
+                            _allergies.add(allergy);
+                          } else {
+                            _allergies.remove(allergy);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ListTile(
+                  shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
+                  leading: Icon(Icons.add),
+                  title: Text("Other"),
+                  onTap: () {
+                    _showCustomDialog(title: "Add Allergy", labelText: "Allergy Name", listToUpdate: _allergies, suggestionList: _commonAllergies);
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Text(" Dietary Preferences", style: TextStyle(color: Colors.black, fontSize: 15),),
+                const SizedBox(height: 9,),
+                Wrap(
+                  runSpacing: 8,
+                  spacing: 8,
+                  children: _dietarySuggestions.map((preference){
+                    bool isPrefSel = _dietaryPref.contains(preference);
+                    return ChoiceChip(
+                      selectedColor: Color(0xFF749BC2),
+                      label: Text(preference),
+                      selected: isPrefSel,
+                      onSelected: (selected){
+                        setState(() {
+                          if(selected){
+                            _dietaryPref.add(preference);
+                          } else {
+                            _dietaryPref.remove(preference);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+                const SizedBox(height: 10,),
+                ListTile(
+                  shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
+                  leading: Icon(Icons.add),
+                  title: Text("Other"),
+                  onTap: (){
+                    _showCustomDialog(title: "Add Dietary Preference",labelText: "Dietary Preference",listToUpdate: _dietaryPref, suggestionList: _dietarySuggestions);
+                  },
+                ),
+                // Implement medical conditions, pref cuisines and profile pic url here if required
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                    style: customElevatedButtonStyle(140, 40),
+                    onPressed: _submitForm,
+                    child: const Text("Submit")),
+              ],
+            ),
           ),
         ),
       ),

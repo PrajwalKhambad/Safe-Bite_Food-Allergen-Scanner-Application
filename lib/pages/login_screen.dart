@@ -37,12 +37,8 @@ class _LoginFormState extends State<LoginForm> {
     return Scaffold(
       body: Form(
         child: Container(
-          decoration: BoxDecoration(gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [ Color.fromARGB(255, 177, 216, 247), Color.fromARGB(255, 104, 179, 241), Color.fromARGB(255, 104, 179, 245), Color.fromARGB(255, 177, 216, 247)]
-          )),
-          padding: EdgeInsets.all(20),
+          decoration:const BoxDecoration(color: Color(0xFFF6F4EB)),
+          padding:const EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -59,7 +55,7 @@ class _LoginFormState extends State<LoginForm> {
                       controller: emailcontroller,
                       decoration: const InputDecoration(
                         filled: true,
-                        fillColor: Color.fromARGB(255, 209, 222, 236),
+                        fillColor: Color(0xFFF6F4EB),
                           border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                           hintText: "Enter your email",
                           prefixIcon: Icon(Icons.mail),
@@ -79,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
                       controller: passcontroller,
                       decoration: const InputDecoration(
                         filled: true,
-                        fillColor: Color.fromARGB(255, 210, 222, 237),
+                        fillColor: Color(0xFFF6F4EB),
                           border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(20))),
                           hintText: 'Enter your password',
                           prefixIcon: Icon(Icons.password)),
@@ -140,7 +136,7 @@ class _LoginFormState extends State<LoginForm> {
                                     login = !login;
                                   });
                                 },
-                                child: const Text("Sign-Up", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)),
+                                child: const Text("Sign-Up", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF749BC2)),)),
                           ],
                         ),
                       ],
@@ -185,7 +181,7 @@ class _LoginFormState extends State<LoginForm> {
                                     login = !login;
                                   });
                                 },
-                                child: const Text("Login", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),)),
+                                child: const Text("Login", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF749BC2)),)),
                           ],
                         ),
                       ],

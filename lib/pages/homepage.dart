@@ -27,55 +27,67 @@ class _HomePageState extends State<HomePage> {
           style: customTextStyle_appbar,
         ),
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                if (textScanning) const CircularProgressIndicator(),
-                if (!textScanning && imageFile == null)
-                  Container(
-                    width: 300,
-                    height: 300,
-                    color: Colors.grey,
+      body: Container(
+        color: customBackgroundColor,
+        child: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (textScanning) const CircularProgressIndicator(),
+                  if (!textScanning && imageFile == null)
+                    Container(
+                      width: 300,
+                      height: 300,
+                      color: Colors.grey.shade400,
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.image, size: 100,),
+                            Text("Scan an Image with Camera\nOR Add an image from gallery")
+                          ],
+                        ),
+                      ),
+                    ),
+                  if (imageFile != null) Image.file(File(imageFile!.path)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.only(top: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            getImage(ImageSource.gallery);
+                          },
+                          child: Icon(Icons.image, color: customBackgroundColor,),
+                          style: customElevatedButtonStyle(30, 40),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.only(top: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            getImage(ImageSource.camera);
+                          },
+                          child: Icon(Icons.camera_alt,color: customBackgroundColor,),
+                          style: customElevatedButtonStyle(30, 40),
+                        ),
+                      ),
+                    ],
                   ),
-                if (imageFile != null) Image.file(File(imageFile!.path)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.only(top: 10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          getImage(ImageSource.gallery);
-                        },
-                        child: Icon(Icons.image),
-                        style: customElevatedButtonStyle(30, 40),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 5),
-                      padding: const EdgeInsets.only(top: 10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          getImage(ImageSource.camera);
-                        },
-                        child: Icon(Icons.camera_alt),
-                        style: customElevatedButtonStyle(30, 40),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Container(
-                  child: Text(scannedText),
-                )
-              ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: Text(scannedText),
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
+import 'package:safe_bite/themes.dart';
 
 import '../firebase_methods/firebase_auth_method.dart';
 
@@ -18,7 +19,6 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
   final _auth = FirebaseAuth.instance;
   String accName = 'Name';
   String accountEmail = 'Email';
-  var snapshot;
 
   Future<void> getData() async {
     final user = _auth.currentUser;
@@ -41,7 +41,7 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
   @override
   void initState() {
     super.initState();
-    snapshot = getData();
+    getData();
   }
 
   @override
@@ -51,11 +51,11 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Colors.blue),
-            accountName: Text(accName),
-            accountEmail: Text(accountEmail),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: Colors.orange,
+            decoration: BoxDecoration(color: Color(0xFF4682A9)),
+            accountName: Text(accName, style: customTextStyle_normal,),
+            accountEmail: Text(accountEmail, style: customTextStyle_normal,),
+            currentAccountPicture:const CircleAvatar(
+              backgroundColor: Color(0xFF91C8E4),
               child: Text(
                 "A",
                 style: TextStyle(fontSize: 40),
@@ -63,37 +63,52 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
             ),
           ),
           ListTile(
+            tileColor: Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            hoverColor: customBackgroundColor,
             leading: Icon(Icons.account_box_outlined),
             title: Text("My Profile"),
             onTap: () {
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return My_Profile_Page();
-              }));
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (BuildContext context) {
+            return My_Profile_Page();
+          }));
             },
           ),
           ListTile(
+            tileColor: Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            hoverColor: customBackgroundColor,
             leading: Icon(Icons.medical_services_outlined),
             title: Text("Medicines"),
             onTap: () {},
           ),
           ListTile(
+            tileColor: Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            hoverColor: customBackgroundColor,
             leading: Icon(Icons.arrow_back_ios_new_outlined),
             title: Text("About"),
             onTap: () {},
           ),
           ListTile(
+            tileColor: Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            hoverColor: customBackgroundColor,
             leading: Icon(Icons.logout),
             title: Text("Logout"),
             onTap: () {
-              logout();
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return LoginForm();
-              }));
+          logout();
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (BuildContext context) {
+            return LoginForm();
+          }));
             },
           ),
           ListTile(
+            tileColor: Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            hoverColor: customBackgroundColor,
             leading: Icon(Icons.exit_to_app),
             title: Text("Exit App"),
             onTap: () {},
