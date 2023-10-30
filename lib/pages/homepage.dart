@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safe_bite/fetch.dart';
 import 'package:safe_bite/pages/homepage_drawer.dart';
 import 'package:safe_bite/themes.dart';
 
@@ -17,6 +19,9 @@ class _HomePageState extends State<HomePage> {
   bool textScanning = false;
   XFile? imageFile;
   String scannedText = "";
+  String url = "";
+  String ingredients = "";
+  var data;
 
   @override
   Widget build(BuildContext context) {
@@ -83,9 +88,32 @@ class _HomePageState extends State<HomePage> {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
-                    child: Text(scannedText),
-                  )
+                  Card(
+                    color: Colors.red,
+                    margin: EdgeInsets.all(8),
+                    child: Container(
+                      child: Text(scannedText),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      print("op");
+                      url = 'http://192.168.0.103:5000/api?query=$scannedText';
+                      print("url done");
+                      data = await fetchData(url);
+                      var decoded = jsonDecode(data);
+                      print("doneee");
+                      setState(() {
+                        ingredients = decoded['extracted_ingredients'];
+                        print(ingredients);
+                      });
+                    },
+                    child: const Text("Extract"),
+                  ),
+                  Text("ingredients=    $ingredients")
                 ],
               ),
             ),
@@ -118,7 +146,6 @@ class _HomePageState extends State<HomePage> {
     final textDetector = TextRecognizer();
     RecognizedText recognizedText = await textDetector.processImage(inputImage);
     await textDetector.close();
-    scannedText = "";
     for (TextBlock block in recognizedText.blocks) {
       for (TextLine line in block.lines) {
         scannedText = scannedText + line.text + "\n";
