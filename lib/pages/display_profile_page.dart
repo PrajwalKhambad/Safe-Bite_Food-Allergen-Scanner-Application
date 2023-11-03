@@ -1,7 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:safe_bite/pages/homepage.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:safe_bite/pages/update_profile.dart';
 import 'package:safe_bite/themes.dart';
 
@@ -17,10 +20,15 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
   final _auth = FirebaseAuth.instance;
   String _email = "Email";
   String name = "Name";
+  String firstname = "";
+  String surname = "";
   int age = 0;
   String gender = "Gender";
   List<dynamic> allergies = [];
   List<dynamic> dietaryPref = [];
+  String profilePicUrl = "";
+
+  bool isLoading = false;
 
   Future<void> getData() async {
     final user = _auth.currentUser;
@@ -33,12 +41,14 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
       if (snapshot.exists) {
         print("Snapshot exists");
         setState(() {
-          name = snapshot.data()!['Name'];
-          name = "$name  " + snapshot.data()!['Surname'];
+          firstname = snapshot.data()!['Name'];
+          surname = snapshot.data()!['Surname'];
+          name = "$firstname $surname";
           age = snapshot.data()!['Age'];
           gender = snapshot.data()!['Gender'];
           allergies = snapshot.data()!['Allergies'];
           dietaryPref = snapshot.data()!['Dietary_Pref'];
+          profilePicUrl = snapshot.data()!['profileImageUrl'];
         });
       }
     }
@@ -50,133 +60,322 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
     getData();
   }
 
+  Future<void> pick_and_uploadImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      setState(() {
+        isLoading = true;
+      });
+
+      final File imageFile = File(pickedFile.path);
+      final storage = FirebaseStorage.instance;
+      Reference storageRef = storage.ref().child('profile_images/$_email.jpg');
+      await storageRef.putFile(imageFile);
+
+      String downloadUrl = await storageRef.getDownloadURL();
+      _firestore
+          .collection('users')
+          .doc(_email)
+          .update({'profileImageUrl': downloadUrl});
+
+      setState(() {
+        profilePicUrl = downloadUrl;
+        isLoading = false;
+      });
+    }
+  }
+
+  Future<void> openEditDialog(String dialogTitle, String labelText,
+      Function(String) onInfoChanged) async {
+    final newInfo = await showDialog<String>(
+      context: context,
+      builder: (context) {
+        return EditInfoDialog(
+          currentInfo: dialogTitle == 'Name'
+              ? name
+              : dialogTitle == 'Age'
+                  ? age.toString()
+                  : gender,
+          onInfoChanged: onInfoChanged,
+          dialogTitle: dialogTitle,
+          labelText: labelText,
+        );
+      },
+    );
+
+    if (newInfo != null) {
+      onInfoChanged(newInfo);
+    }
+  }
+
+  Future<void> openEditNameDialog(
+      Function(String, String) onNameChanged) async {
+    final newName = await showDialog<List>(
+        context: context,
+        builder: (context) {
+          return EditName(
+            currFirstName: firstname,
+            currSurname: surname,
+            onNameChanged: onNameChanged,
+          );
+        });
+
+    if (newName != null) {
+      onNameChanged(newName[0], newName[1]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          "Your  Profile",
-          style: customTextStyle_appbar,
-        ),
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
-            size: 28,
-            color: customBackgroundColor,
-          ),
-        ),
-      ),
-      body: Container(
-        color: customBackgroundColor,
+          title: Text(
+        "Your Profile",
+        style: customTextStyle_appbar,
+      )),
+      body: SingleChildScrollView(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Expanded(
-              flex: 2,
-              child: _TopPortion(),
-            ),
-            Expanded(
-              flex: 3,
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal:15, vertical: 25),
-                child: Column(
+            Card(
+              color: Colors.white,
+              elevation: 4,
+              child: Container(
+                color: customBackgroundColor,
+                width: double.infinity,
+                height: 200,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Chip(
-                      backgroundColor: Color(0xFF749BC2),
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5), // Set borderRadius to 0 for rectangular shape
-                          side: BorderSide(color: Color(0xFF749BC2)), // Add a border if desired
+                    Stack(alignment: Alignment.center, children: [
+                      Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.black, width: 4)),
+                        child: CircleAvatar(
+                          backgroundColor: const Color(0xFF749BC2),
+                          radius: 70,
+                          backgroundImage: profilePicUrl.isNotEmpty
+                              ? NetworkImage(profilePicUrl)
+                              : null,
                         ),
-                        label: Text(name)),
+                      ),
+                      if (isLoading) CircularProgressIndicator()
+                    ]),
                     const SizedBox(
-                      height: 16,
+                      width: 5,
                     ),
+                    IconButton(
+                        color: const Color(0xFF749BC2),
+                        onPressed: () {
+                          pick_and_uploadImage();
+                        },
+                        icon: const Icon(Icons.edit))
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              color: Colors.white,
+              elevation: 4,
+              // margin: EdgeInsets.all(10),
+              child: Container(
+                color: customBackgroundColor,
+                width: double.infinity,
+                padding: const EdgeInsets.all(13),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Name:  $name",
+                        style:
+                            customTextStyle_normal.apply(color: Colors.black)),
+                    TextButton(
+                        onPressed: () {
+                          openEditNameDialog((fname, lastname) {
+                            setState(() {
+                              firstname = fname;
+                              surname = lastname;
+                              name = "$firstname $surname";
+                              _firestore
+                                  .collection('users')
+                                  .doc(_email)
+                                  .update({"Name": firstname});
+                              _firestore
+                                  .collection('users')
+                                  .doc(_email)
+                                  .update({"Surname": surname});
+                            });
+                          });
+                        },
+                        child:const Text("Edit", style: TextStyle(color: Color(0xFF749BC2)),))
+                  ],
+                ),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    // margin: EdgeInsets.all(10),
+                    child: Container(
+                      color: customBackgroundColor,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(13),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Gender:  $gender",
+                              style: customTextStyle_normal.apply(
+                                  color: Colors.black)),
+                          TextButton(
+                              onPressed: () {
+                                openEditDialog('Gender', 'Enter you gender',
+                                    (newGender) {
+                                  setState(() {
+                                    gender = newGender;
+                                    _firestore
+                                        .collection('users')
+                                        .doc(_email)
+                                        .update({"Gender": gender});
+                                  });
+                                });
+                              },
+                              child:const Text("Edit", style: TextStyle(color: Color(0xFF749BC2))))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Card(
+                    color: Colors.white,
+                    elevation: 4,
+                    // margin: EdgeInsets.all(10),
+                    child: Container(
+                      color: customBackgroundColor,
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(13),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text("Age:  $age",
+                              style: customTextStyle_normal.apply(
+                                  color: Colors.black)),
+                          TextButton(
+                              onPressed: () {
+                                openEditDialog('Age', 'Enter you age',
+                                    (newAge) {
+                                  setState(() {
+                                    age = int.parse(newAge);
+                                    _firestore
+                                        .collection('users')
+                                        .doc(_email)
+                                        .update({"Age": age});
+                                  });
+                                });
+                              },
+                              child:const Text("Edit", style: TextStyle(color: Color(0xFF749BC2))))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Card(
+              color: Colors.white,
+              elevation: 4,
+              // margin: EdgeInsets.all(10),
+              child: Container(
+                color: customBackgroundColor,
+                width: double.infinity,
+                padding: const EdgeInsets.all(13),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Chip(
-                          backgroundColor: Color(0xFF749BC2),
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5), // Set borderRadius to 0 for rectangular shape
-                          side: BorderSide(color: Color(0xFF749BC2)), // Add a border if desired
+                        Text(
+                          "Allergies:",
+                          style:
+                              customTextStyle_normal.apply(color: Colors.black),
                         ),
-                          label: Text(
-                            "Age: $age",
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        Chip(
-                          backgroundColor: Color(0xFF749BC2),
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5), // Set borderRadius to 0 for rectangular shape
-                          side: BorderSide(color: Color(0xFF749BC2)), // Add a border if desired
-                        ),
-                          label: Text(
-                            "Gender: $gender",
-                          ),
-                        ),
+                        TextButton(onPressed: () {}, child: const Text("Add", style: TextStyle(color: Color(0xFF749BC2)))),
                       ],
                     ),
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    const Text(
-                      "Allergies",
-                      style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Wrap(
-                        spacing: 8,
+                        spacing: 10,
                         runSpacing: 5,
                         children: allergies.map((allergen) {
                           return Chip(
-                            backgroundColor: Color(0xFF749BC2),
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // Set borderRadius to 0 for rectangular shape
-                          side: BorderSide(color: Color(0xFF749BC2)), // Add a border if desired
-                        ),
+                            onDeleted: (){},
+                            deleteIcon:const Icon(Icons.delete, size: 15,),
+                            backgroundColor:const Color(0xFF749BC2),
+                            labelStyle:const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side:const BorderSide(color: Color(0xFF749BC2))),
                             label: Text(allergen),
                           );
                         }).toList(),
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      "Dietary Preferences",
-                      style: TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(
-                      height: 10,
+                  ],
+                ),
+              ),
+            ),
+            Card(
+              color: Colors.white,
+              elevation: 4,
+              // margin: EdgeInsets.all(10),
+              child: Container(
+                color: customBackgroundColor,
+                width: double.infinity,
+                padding: const EdgeInsets.all(13),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "Dietary Preferences:",
+                          style:
+                              customTextStyle_normal.apply(color: Colors.black),
+                        ),
+                        TextButton(onPressed: () {}, child: const Text("Add", style: TextStyle(color: Color(0xFF749BC2)))),
+                      ],
                     ),
                     Container(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      padding: const EdgeInsets.only(top: 10),
                       child: Wrap(
-                        spacing: 8,
+                        spacing: 10,
                         runSpacing: 5,
-                        children: dietaryPref.map((pref) {
+                        children: dietaryPref.map((allergen) {
                           return Chip(
-                            backgroundColor: Color(0xFF749BC2),
-                      labelStyle: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10), // Set borderRadius to 0 for rectangular shape
-                          side: BorderSide(color: Color(0xFF749BC2)), // Add a border if desired
-                        ),
-                            label: Text(pref),
+                            onDeleted: (){},
+                            deleteIcon:const Icon(Icons.delete, size: 15,),
+                            backgroundColor:const Color(0xFF749BC2),
+                            labelStyle:const TextStyle(
+                                color: Colors.white,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                side:const BorderSide(color: Color(0xFF749BC2))),
+                            label: Text(allergen),
                           );
                         }).toList(),
                       ),
@@ -188,74 +387,6 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class _TopPortion extends StatelessWidget {
-  const _TopPortion({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Container(
-          margin: EdgeInsets.only(bottom: 80),
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                begin: Alignment.bottomCenter,
-                end: Alignment.topCenter,
-                colors: [
-                  Color(0xFF4682A9),
-                  Color(0xFF4682A9),
-                ]),
-            borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(25),
-                bottomRight: Radius.circular(25)),
-          ),
-        ),
-        Align(
-          alignment: Alignment.bottomCenter,
-          child: SizedBox(
-            height: 200,
-            width: 200,
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Color(0xFF91C8E4),
-                    shape: BoxShape.circle,
-                    // Image
-                  ),
-                ),
-                Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: CircleAvatar(
-                    radius: 25,
-                    backgroundColor: customBackgroundColor,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return UpdateProfileScreen();
-                        }));
-                      },
-                      icon: Icon(
-                        Icons.edit,
-                        size: 32,
-                        color: Color(0xFF91C8E4),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        )
-      ],
     );
   }
 }

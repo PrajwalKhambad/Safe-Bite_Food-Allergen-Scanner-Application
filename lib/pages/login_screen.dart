@@ -72,6 +72,7 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(
                     width: double.infinity - 150,
                     child: TextField(
+                      obscureText: true,
                       controller: passcontroller,
                       decoration: const InputDecoration(
                         filled: true,

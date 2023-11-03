@@ -1,11 +1,13 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
 import 'package:safe_bite/themes.dart';
-
-import '../firebase_methods/firebase_auth_method.dart';
 
 class HomePage_Drawer extends StatefulWidget {
   const HomePage_Drawer({super.key});
@@ -19,6 +21,7 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
   final _auth = FirebaseAuth.instance;
   String accName = 'Name';
   String accountEmail = 'Email';
+  String? profileImageUrl;
 
   Future<void> getData() async {
     final user = _auth.currentUser;
@@ -33,6 +36,7 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
           String initialName = snapshot.data()!['Name'];
           String surname = snapshot.data()!['Surname'];
           accName = "$initialName  $surname";
+          profileImageUrl = snapshot.data()!['profileImageUrl'];
         });
       }
     }
@@ -44,6 +48,26 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
     getData();
   }
 
+  Future<void> uploadImage() async{
+    final imagePicker = ImagePicker();
+    final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+
+    if(pickedFile != null){
+      final file = File(pickedFile.path);
+      final storage = FirebaseStorage.instance;
+      Reference storageRef = storage.ref().child('profile_images/$accountEmail.jpg');
+      
+      await storageRef.putFile(file);
+      final imageUrl = await storageRef.getDownloadURL();
+
+      await _firestore.collection('users').doc(accountEmail).update({'profileImageUrl': imageUrl});
+
+      setState(() {
+        profileImageUrl = imageUrl;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -51,66 +75,74 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Color(0xFF4682A9)),
+            decoration: const BoxDecoration(color: Color(0xFF4682A9)),
             accountName: Text(accName, style: customTextStyle_normal,),
             accountEmail: Text(accountEmail, style: customTextStyle_normal,),
-            currentAccountPicture:const CircleAvatar(
-              backgroundColor: Color(0xFF91C8E4),
-              child: Text(
-                "A",
-                style: TextStyle(fontSize: 40),
-              ),
-            ),
+            currentAccountPicture: profileImageUrl != null 
+              ? Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black, width: 3)
+                ),
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: NetworkImage(profileImageUrl!, scale: 1),
+                ),
+              )
+              : GestureDetector(
+                onTap: (){
+                  uploadImage();
+                },
+                child: const CircleAvatar(
+                  backgroundColor: Color(0xFF91C8E4),
+                  child: Icon(Icons.edit, color: Colors.black,)
+                ),
+              )
           ),
           ListTile(
-            tileColor: Color(0xFF91C8E4),
+            // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            hoverColor: customBackgroundColor,
-            leading: Icon(Icons.account_box_outlined),
-            title: Text("My Profile"),
+            leading:const Icon(Icons.account_box_outlined),
+            title:const Text("My Profile"),
             onTap: () {
           Navigator.of(context).push(
               MaterialPageRoute(builder: (BuildContext context) {
-            return My_Profile_Page();
+            return const My_Profile_Page();
           }));
             },
           ),
           ListTile(
-            tileColor: Color(0xFF91C8E4),
+            // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            hoverColor: customBackgroundColor,
-            leading: Icon(Icons.medical_services_outlined),
-            title: Text("Medicines"),
+            leading:const Icon(Icons.medical_services_outlined),
+            title:const Text("Medicines"),
             onTap: () {},
           ),
           ListTile(
-            tileColor: Color(0xFF91C8E4),
+            // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            hoverColor: customBackgroundColor,
-            leading: Icon(Icons.arrow_back_ios_new_outlined),
-            title: Text("About"),
+            leading:const Icon(Icons.arrow_back_ios_new_outlined),
+            title:const Text("About"),
             onTap: () {},
           ),
           ListTile(
-            tileColor: Color(0xFF91C8E4),
+            // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            hoverColor: customBackgroundColor,
-            leading: Icon(Icons.logout),
-            title: Text("Logout"),
+            leading:const Icon(Icons.logout),
+            title:const Text("Logout"),
             onTap: () {
           logout();
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (BuildContext context) {
-            return LoginForm();
+            return const LoginForm();
           }));
             },
           ),
           ListTile(
-            tileColor: Color(0xFF91C8E4),
+            // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            hoverColor: customBackgroundColor,
-            leading: Icon(Icons.exit_to_app),
-            title: Text("Exit App"),
+            leading:const Icon(Icons.exit_to_app),
+            title:const Text("Exit App"),
             onTap: () {},
           ),
         ],

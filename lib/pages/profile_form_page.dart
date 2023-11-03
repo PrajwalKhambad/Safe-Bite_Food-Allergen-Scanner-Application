@@ -20,6 +20,7 @@ class _Profile_FormState extends State<Profile_Form> {
   String _surname = "";
   int _age = 0;
   String _gender = "";
+  String profilePicUrl = "";
 
   final List<String> _allergies = [];
   final List<String> _commonAllergies = ['Peanuts','Milk','Eggs','Wheat','Soy'];
@@ -46,6 +47,7 @@ class _Profile_FormState extends State<Profile_Form> {
           'Gender': _gender,
           'Allergies': _allergies,
           'Dietary_Pref': _dietaryPref,
+          'profileImageUrl': profilePicUrl,
           // 'Medical_Conditions' : _medicalConditions,
           // 'Pref_Cuisines' : _prefCuisines,
           // 'PicUrl' : _profilePicUrl,
