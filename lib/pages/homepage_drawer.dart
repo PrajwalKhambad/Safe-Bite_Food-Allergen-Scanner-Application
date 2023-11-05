@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
+import 'package:safe_bite/pages/allergyfreemeals.dart';
 import 'package:safe_bite/themes.dart';
 
 class HomePage_Drawer extends StatefulWidget {
@@ -19,8 +20,8 @@ class HomePage_Drawer extends StatefulWidget {
 class _HomePage_DrawerState extends State<HomePage_Drawer> {
   final _firestore = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
-  String accName = 'Name';
-  String accountEmail = 'Email';
+  String accName = '';
+  String accountEmail = '';
   String? profileImageUrl;
 
   Future<void> getData() async {
@@ -115,8 +116,12 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
             leading:const Icon(Icons.medical_services_outlined),
-            title:const Text("Medicines"),
-            onTap: () {},
+            title:const Text("Allergen Free Meals"),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                return const MealScreen();
+              }));
+            },
           ),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),

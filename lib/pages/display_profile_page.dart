@@ -307,7 +307,22 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                           style:
                               customTextStyle_normal.apply(color: Colors.black),
                         ),
-                        TextButton(onPressed: () {}, child: const Text("Add", style: TextStyle(color: Color(0xFF749BC2)))),
+                        TextButton(onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AddAllergiesDialog(
+                                allergies: allergies,
+                                onAllergiesUpdated: (newAllergies){
+                                  setState(() {
+                                    allergies = newAllergies;
+                                    _firestore.collection('users').doc(_email).update({"Allergies": allergies});
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        }, child: const Text("Add", style: TextStyle(color: Color(0xFF749BC2)))),
                       ],
                     ),
                     Container(
@@ -317,7 +332,12 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                         runSpacing: 5,
                         children: allergies.map((allergen) {
                           return Chip(
-                            onDeleted: (){},
+                            onDeleted: (){
+                              setState(() {
+                                allergies.remove(allergen);
+                                _firestore.collection('users').doc(_email).update({"Allergies":allergies});
+                              });
+                            },
                             deleteIcon:const Icon(Icons.delete, size: 15,),
                             backgroundColor:const Color(0xFF749BC2),
                             labelStyle:const TextStyle(
@@ -355,7 +375,22 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                           style:
                               customTextStyle_normal.apply(color: Colors.black),
                         ),
-                        TextButton(onPressed: () {}, child: const Text("Add", style: TextStyle(color: Color(0xFF749BC2)))),
+                        TextButton(onPressed: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AddDietaryPrefDialog(
+                                prefs: dietaryPref,
+                                onprefsUpdated: (newPrefs){
+                                  setState(() {
+                                    dietaryPref = newPrefs;
+                                    _firestore.collection('users').doc(_email).update({"Dietary_Pref": dietaryPref});
+                                  });
+                                },
+                              );
+                            },
+                          );
+                        }, child: const Text("Add", style: TextStyle(color: Color(0xFF749BC2)))),
                       ],
                     ),
                     Container(
@@ -365,7 +400,12 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                         runSpacing: 5,
                         children: dietaryPref.map((allergen) {
                           return Chip(
-                            onDeleted: (){},
+                            onDeleted: (){
+                              setState(() {
+                                dietaryPref.remove(allergen);
+                                _firestore.collection('users').doc(_email).update({"Dietary_Pref":dietaryPref});
+                              });
+                            },
                             deleteIcon:const Icon(Icons.delete, size: 15,),
                             backgroundColor:const Color(0xFF749BC2),
                             labelStyle:const TextStyle(
