@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:safe_bite/themes.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Meal {
   final int id;
@@ -70,7 +71,7 @@ class _MealScreenState extends State<MealScreen> {
     const String apiUrl = 'https://api.spoonacular.com/mealplanner/generate';
 
     final Map<String, String> queryParams = {
-      // 'apiKey': 'f4cd3530b540488bbc54d73f2e939e96',
+      'apiKey': 'f4cd3530b540488bbc54d73f2e939e96',
       'timeFrame': 'day', // You can change this as needed
       'targetCalories': '2000', // You can change this as needed
       'diet': 'vegetarian', // You can change this as needed
@@ -98,6 +99,19 @@ class _MealScreenState extends State<MealScreen> {
     }
   }
 
+  Future<void> _launchUrl(String url) async {
+    if(url.isNotEmpty){
+      final Uri uri = Uri.parse(url);
+      if(await canLaunchUrl(uri)){
+        await launchUrl(uri);
+      } else {
+        print("Could not launch $url");
+      }
+    } else {
+      print("Invalid Url: $url");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -119,82 +133,106 @@ class _MealScreenState extends State<MealScreen> {
               style: customTextStyle_normal.apply(color: Colors.red),
             ));
           } else {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Card(
-                    child: Container(
+            return Column(
+              children: [
+                Card(
+                  margin:const EdgeInsets.all(10),
+                  child: Container(
+                      padding: const EdgeInsets.all(8),
                       color: customBackgroundColor,
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          // Display the meal title
-                          ListTile(
-                            horizontalTitleGap: 40,
-                            onTap: () {},
-                            title: Text(
-                              snapshot.data![index].title,
-                              style: customTextStyle_normal.apply(
-                                  color: Colors.black),
+                      width: double.infinity,
+                      child: Center(
+                          child: Text(
+                        "The below meals do not contain: $userAllergies",
+                        style:
+                            customTextStyle_normal.apply(color: Colors.black),
+                      ))),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Card(
+                          child: Container(
+                            color: customBackgroundColor,
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                // Display the meal title
+                                ListTile(
+                                  horizontalTitleGap: 40,
+                                  onTap: () {},
+                                  title: Text(
+                                    snapshot.data![index].title,
+                                    style: customTextStyle_normal.apply(
+                                        color: Colors.black),
+                                  ),
+                                ),
+                                // Display the meal image (if available)
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    if (snapshot.data![index].imageType ==
+                                        "jpg")
+                                      Image.network(
+                                        "https://spoonacular.com/recipeImages/${snapshot.data![index].id}-480x360.jpg",
+                                        height: 200,
+                                        width:
+                                            MediaQuery.of(context).size.width /
+                                                1.5,
+                                        fit: BoxFit.fill,
+                                      ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          "Ready in ${snapshot.data![index].readyInMinutes} minutes",
+                                          style: customTextStyle_normal.apply(
+                                              fontSizeFactor: 0.8,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(
+                                          height: 1,
+                                        ),
+                                        Text(
+                                          "Servings: ${snapshot.data![index].servings}",
+                                          style: customTextStyle_normal.apply(
+                                              fontSizeFactor: 0.7,
+                                              color: Colors.black),
+                                        ),
+                                        const SizedBox(
+                                          height: 4,
+                                        ),
+                                        ElevatedButton(
+                                          style: customElevatedButtonStyle(
+                                              double.infinity, 15),
+                                          onPressed: () {
+                                            print(snapshot
+                                                .data![index].sourceUrl);
+                                            _launchUrl(snapshot
+                                                .data![index].sourceUrl);
+                                          },
+                                          child: const Text("View Recipe"),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                // Provide a button to open the source URL
+                              ],
                             ),
                           ),
-                          // Display the meal image (if available)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              if (snapshot.data![index].imageType == "jpg")
-                                Image.network(
-                                  "https://spoonacular.com/recipeImages/${snapshot.data![index].id}-480x360.jpg",
-                                  height: 200,
-                                  width:
-                                      MediaQuery.of(context).size.width / 1.5,
-                                  fit: BoxFit.fill,
-                                ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Ready in ${snapshot.data![index].readyInMinutes} minutes",
-                                    style: customTextStyle_normal.apply(
-                                        fontSizeFactor: 0.8,
-                                        color: Colors.black),
-                                  ),
-                                  const SizedBox(
-                                    height: 1,
-                                  ),
-                                  Text(
-                                    "Servings: ${snapshot.data![index].servings}",
-                                    style: customTextStyle_normal.apply(
-                                        fontSizeFactor: 0.7,
-                                        color: Colors.black),
-                                  ),
-                                  const SizedBox(
-                                    height: 4,
-                                  ),
-                                  ElevatedButton(
-                                    style: customElevatedButtonStyle(
-                                        double.infinity, 15),
-                                    onPressed: () {
-                                      // Open the source URL in a web browser
-                                      // You can use the url_launcher package for this.
-                                      // Example: launch(snapshot.data[index].sourceUrl);
-                                    },
-                                    child: const Text("View Recipe"),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                          // Provide a button to open the source URL
-                        ],
-                      ),
-                    ),
+                        ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+              ],
             );
           }
         }),

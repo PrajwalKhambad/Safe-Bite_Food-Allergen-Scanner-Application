@@ -26,7 +26,7 @@ class _LoginFormState extends State<LoginForm> {
     FirebaseAuth.instance.authStateChanges().listen((User? user){
       if(user != null){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
-          return HomePage();
+          return const HomePage();
         }));
       }
     });

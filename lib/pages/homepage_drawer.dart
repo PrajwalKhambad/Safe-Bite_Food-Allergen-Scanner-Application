@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
 import 'package:safe_bite/pages/allergyfreemeals.dart';
+import 'package:safe_bite/pages/scan_history.dart';
 import 'package:safe_bite/themes.dart';
 
 class HomePage_Drawer extends StatefulWidget {
@@ -49,19 +50,23 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
     getData();
   }
 
-  Future<void> uploadImage() async{
+  Future<void> uploadImage() async {
     final imagePicker = ImagePicker();
     final pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
 
-    if(pickedFile != null){
+    if (pickedFile != null) {
       final file = File(pickedFile.path);
       final storage = FirebaseStorage.instance;
-      Reference storageRef = storage.ref().child('profile_images/$accountEmail.jpg');
-      
+      Reference storageRef =
+          storage.ref().child('profile_images/$accountEmail.jpg');
+
       await storageRef.putFile(file);
       final imageUrl = await storageRef.getDownloadURL();
 
-      await _firestore.collection('users').doc(accountEmail).update({'profileImageUrl': imageUrl});
+      await _firestore
+          .collection('users')
+          .doc(accountEmail)
+          .update({'profileImageUrl': imageUrl});
 
       setState(() {
         profileImageUrl = imageUrl;
@@ -76,49 +81,57 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            decoration: const BoxDecoration(color: Color(0xFF4682A9)),
-            accountName: Text(accName, style: customTextStyle_normal,),
-            accountEmail: Text(accountEmail, style: customTextStyle_normal,),
-            currentAccountPicture: profileImageUrl != null 
-              ? Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black, width: 3)
-                ),
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: NetworkImage(profileImageUrl!, scale: 1),
-                ),
-              )
-              : GestureDetector(
-                onTap: (){
-                  uploadImage();
-                },
-                child: const CircleAvatar(
-                  backgroundColor: Color(0xFF91C8E4),
-                  child: Icon(Icons.edit, color: Colors.black,)
-                ),
-              )
-          ),
+              decoration: const BoxDecoration(color: Color(0xFF4682A9)),
+              accountName: Text(
+                accName,
+                style: customTextStyle_normal,
+              ),
+              accountEmail: Text(
+                accountEmail,
+                style: customTextStyle_normal,
+              ),
+              currentAccountPicture: profileImageUrl != null
+                  ? Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          border: Border.all(color: Colors.black, width: 3)),
+                      child: CircleAvatar(
+                        radius: 50,
+                        backgroundImage:
+                            NetworkImage(profileImageUrl!, scale: 1),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        uploadImage();
+                      },
+                      child: const CircleAvatar(
+                          backgroundColor: Color(0xFF91C8E4),
+                          child: Icon(
+                            Icons.edit,
+                            color: Colors.black,
+                          )),
+                    )),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            leading:const Icon(Icons.account_box_outlined),
-            title:const Text("My Profile"),
+            leading: const Icon(Icons.account_box_outlined),
+            title: const Text("My Profile"),
             onTap: () {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (BuildContext context) {
-            return const My_Profile_Page();
-          }));
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return const My_Profile_Page();
+              }));
             },
           ),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            leading:const Icon(Icons.medical_services_outlined),
-            title:const Text("Allergen Free Meals"),
+            leading: const Icon(Icons.food_bank_outlined),
+            title: const Text("Allergen Free Meals"),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
                 return const MealScreen();
               }));
             },
@@ -126,29 +139,89 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            leading:const Icon(Icons.arrow_back_ios_new_outlined),
-            title:const Text("About"),
-            onTap: () {},
-          ),
-          ListTile(
-            // tileColor:const Color(0xFF91C8E4),
-            iconColor: Colors.black,
-            leading:const Icon(Icons.logout),
-            title:const Text("Logout"),
+            leading: const Icon(Icons.history),
+            title: const Text("Scans History"),
             onTap: () {
-          logout();
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (BuildContext context) {
-            return const LoginForm();
-          }));
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                return const ScanHistory();
+              }));
             },
           ),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
-            leading:const Icon(Icons.exit_to_app),
-            title:const Text("Exit App"),
+            leading: const Icon(Icons.info_outline),
+            title: const Text("About"),
             onTap: () {},
+          ),
+          const Divider(height: 40, color: Colors.black, indent: 10, endIndent: 10,),
+          ListTile(
+            // tileColor:const Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            leading: const Icon(Icons.logout),
+            title: const Text("Logout"),
+            onTap: () {
+              showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return AlertDialog(
+                      title: const Text("Logout"),
+                      content: const Text("Do you want to logout?"),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.red),
+                            )),
+                        TextButton(
+                            onPressed: () {
+                              logout();
+                              Navigator.pushReplacement(context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                return const LoginForm();
+                              }));
+                            },
+                            child: const Text("Logout"))
+                      ],
+                    );
+                  }));
+            },
+          ),
+          ListTile(
+            // tileColor:const Color(0xFF91C8E4),
+            iconColor: Colors.black,
+            leading: const Icon(Icons.exit_to_app),
+            title: const Text("Exit App"),
+            onTap: () {
+              showDialog(
+                context: context,
+                builder: (context) {
+                  return AlertDialog(
+                    title: const Text("Exit App"),
+                    content: const Text("Do you want to exit?"),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            "Cancel",
+                            style: TextStyle(color: Colors.red),
+                          )),
+                      TextButton(
+                          onPressed: () {
+                            exit;
+                          },
+                          child: const Text("Exit"))
+                    ],
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
