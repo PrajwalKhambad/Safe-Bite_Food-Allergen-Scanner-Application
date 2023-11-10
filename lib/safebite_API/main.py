@@ -1,7 +1,13 @@
 from flask import Flask, request, jsonify
 import re
+from joblib import load
 
 app = Flask(__name__)
+
+def get_allergies(text):
+    model=load('lib\edi_pipeline.joblib')
+    allergies=model.predict([text])
+    return allergies[0]
 
 def extract_ingredient(text):
     # Define a regular expression pattern to match ingredients without brackets
