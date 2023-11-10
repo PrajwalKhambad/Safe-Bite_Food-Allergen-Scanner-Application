@@ -130,7 +130,7 @@ class _ScanHistoryState extends State<ScanHistory> {
                               trailing: Icon(
                                 scan.isSafe
                                     ? Icons.check_box
-                                    : Icons.close_outlined,
+                                    : Icons.warning_amber_rounded,
                                 color: scan.isSafe ? Colors.green : Colors.red,
                                 size: 34,
                               ),

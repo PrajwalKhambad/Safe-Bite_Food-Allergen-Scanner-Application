@@ -102,11 +102,12 @@ class _MealScreenState extends State<MealScreen> {
   Future<void> _launchUrl(String url) async {
     if(url.isNotEmpty){
       final Uri uri = Uri.parse(url);
-      if(await canLaunchUrl(uri)){
-        await launchUrl(uri);
-      } else {
-        print("Could not launch $url");
-      }
+      // if(await canLaunchUrl(uri)){
+      //   await launchUrl(uri);
+      // } else {
+      //   print("Could not launch $url");
+      // }
+      await launchUrl(uri);
     } else {
       print("Invalid Url: $url");
     }
@@ -136,14 +137,14 @@ class _MealScreenState extends State<MealScreen> {
             return Column(
               children: [
                 Card(
-                  margin:const EdgeInsets.all(10),
+                  margin:const EdgeInsets.all(12),
                   child: Container(
                       padding: const EdgeInsets.all(8),
                       color: customBackgroundColor,
                       width: double.infinity,
                       child: Center(
                           child: Text(
-                        "The below meals do not contain: $userAllergies",
+                        "The below meals do not contain: ${userAllergies.join(', ')}",
                         style:
                             customTextStyle_normal.apply(color: Colors.black),
                       ))),
@@ -152,80 +153,82 @@ class _MealScreenState extends State<MealScreen> {
                   child: ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Card(
-                          child: Container(
-                            color: customBackgroundColor,
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                // Display the meal title
-                                ListTile(
-                                  horizontalTitleGap: 40,
-                                  onTap: () {},
-                                  title: Text(
-                                    snapshot.data![index].title,
-                                    style: customTextStyle_normal.apply(
-                                        color: Colors.black),
-                                  ),
+                      return Card(
+                        margin:const EdgeInsets.all(12),
+                        child: Container(
+                          width: MediaQuery.of(context).size.width,
+                          color: customBackgroundColor,
+                          padding: const EdgeInsets.only(bottom:17),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // Display the meal title
+                              ListTile(
+                                horizontalTitleGap: 40,
+                                onTap: () {},
+                                title: Text(
+                                  snapshot.data![index].title,
+                                  style: customTextStyle_normal.apply(
+                                      color: Colors.black),
                                 ),
-                                // Display the meal image (if available)
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    if (snapshot.data![index].imageType ==
-                                        "jpg")
-                                      Image.network(
+                              ),
+                              // Display the meal image (if available)
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  if (snapshot.data![index].imageType ==
+                                      "jpg")
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(10),
+                                      child: Image.network(
                                         "https://spoonacular.com/recipeImages/${snapshot.data![index].id}-480x360.jpg",
                                         height: 200,
                                         width:
                                             MediaQuery.of(context).size.width /
-                                                1.5,
+                                                1.75,
                                         fit: BoxFit.fill,
                                       ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          "Ready in ${snapshot.data![index].readyInMinutes} minutes",
-                                          style: customTextStyle_normal.apply(
-                                              fontSizeFactor: 0.8,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(
-                                          height: 1,
-                                        ),
-                                        Text(
-                                          "Servings: ${snapshot.data![index].servings}",
-                                          style: customTextStyle_normal.apply(
-                                              fontSizeFactor: 0.7,
-                                              color: Colors.black),
-                                        ),
-                                        const SizedBox(
-                                          height: 4,
-                                        ),
-                                        ElevatedButton(
-                                          style: customElevatedButtonStyle(
-                                              double.infinity, 15),
-                                          onPressed: () {
-                                            print(snapshot
-                                                .data![index].sourceUrl);
-                                            _launchUrl(snapshot
-                                                .data![index].sourceUrl);
-                                          },
-                                          child: const Text("View Recipe"),
-                                        ),
-                                      ],
                                     ),
-                                  ],
-                                ),
-                                // Provide a button to open the source URL
-                              ],
-                            ),
+                                  Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "Ready in ${snapshot.data![index].readyInMinutes} minutes",
+                                        style: customTextStyle_normal.apply(
+                                            fontSizeFactor: 0.8,
+                                            color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        height: 1,
+                                      ),
+                                      Text(
+                                        "Servings: ${snapshot.data![index].servings}",
+                                        style: customTextStyle_normal.apply(
+                                            fontSizeFactor: 0.7,
+                                            color: Colors.black),
+                                      ),
+                                      const SizedBox(
+                                        height: 4,
+                                      ),
+                                      ElevatedButton(
+                                        style: customElevatedButtonStyle(
+                                            double.infinity, 15),
+                                        onPressed: () {
+                                          print(snapshot
+                                              .data![index].sourceUrl);
+                                          _launchUrl(snapshot
+                                              .data![index].sourceUrl);
+                                        },
+                                        child: const Text("View Recipe"),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                              // Provide a button to open the source URL
+                            ],
                           ),
                         ),
                       );
