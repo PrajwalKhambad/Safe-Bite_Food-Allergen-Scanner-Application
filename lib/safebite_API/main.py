@@ -4,11 +4,6 @@ from joblib import load
 
 app = Flask(__name__)
 
-def get_allergies(text):
-    model=load('lib\edi_pipeline.joblib')
-    allergies=model.predict([text])
-    return allergies[0]
-
 def extract_ingredient(text):
     # Define a regular expression pattern to match ingredients without brackets
     # pattern = r'\b([^()]+)\b'
@@ -31,6 +26,13 @@ def extract_ingredients():
     d['extracted_ingredients'] = ingredients_string
 
     return jsonify(d)
+
+@app.route('/allg', methods=['GET','POST'])
+def get_all():
+    text = str(request.args['query'])
+    model=load("safe_bite/lib/safebite_API/edi_pipeline.joblib")
+    allergies=model.predict([text])
+    return jsonify(allergies[0].tolist())
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)
