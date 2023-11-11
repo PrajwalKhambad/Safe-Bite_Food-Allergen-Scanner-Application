@@ -26,7 +26,7 @@ class _LoginFormState extends State<LoginForm> {
     FirebaseAuth.instance.authStateChanges().listen((User? user){
       if(user != null){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (BuildContext context){
-          return HomePage();
+          return const HomePage();
         }));
       }
     });
@@ -72,6 +72,7 @@ class _LoginFormState extends State<LoginForm> {
                   SizedBox(
                     width: double.infinity - 150,
                     child: TextField(
+                      obscureText: true,
                       controller: passcontroller,
                       decoration: const InputDecoration(
                         filled: true,

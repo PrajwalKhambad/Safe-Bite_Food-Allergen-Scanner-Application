@@ -18,21 +18,17 @@ def extract_ingredient(text):
     return ingredients
 
 @app.route('/api', methods=['GET','POST'])
-def extract_ingredients():
+def pred_allergies():
     d = {}
     text = str(request.args['query'])
     extracted_ingredients = extract_ingredient(text)
     ingredients_string = ', '.join(extracted_ingredients)
     d['extracted_ingredients'] = ingredients_string
+    model = load("lib/safebite_API/edi_pipeline.joblib")
+    allergies = model.predict([ingredients_string])
+    d['predicted_allergies'] = allergies[0].tolist()
 
     return jsonify(d)
 
-@app.route('/allg', methods=['GET','POST'])
-def get_all():
-    text = str(request.args['query'])
-    model=load("safe_bite/lib/safebite_API/edi_pipeline.joblib")
-    allergies=model.predict([text])
-    return jsonify(allergies[0].tolist())
-
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
