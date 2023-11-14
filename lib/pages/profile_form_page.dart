@@ -55,7 +55,7 @@ class _Profile_FormState extends State<Profile_Form> {
 
         Navigator.of(context)
             .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-          return HomePage();
+          return const HomePage();
         }));
       }
     }
@@ -140,7 +140,7 @@ class _Profile_FormState extends State<Profile_Form> {
                       child: ListTile(
                         title: const Text("Gender"),
                         trailing: DropdownButton<String>(
-                          hint: Text("Select gender"),
+                          hint: const Text("Select gender"),
                           value: _gender,
                           onChanged: (value) {
                             setState(() {
@@ -163,7 +163,7 @@ class _Profile_FormState extends State<Profile_Form> {
                 const SizedBox(
                   height: 30,
                 ),
-                Text("  Allergies", style: TextStyle(color: Colors.black, fontSize: 15),),
+                const Text("  Allergies", style: TextStyle(color: Colors.black, fontSize: 15),),
                 const SizedBox(height: 9,),
                 Wrap(
                   runSpacing: 4,
@@ -171,7 +171,7 @@ class _Profile_FormState extends State<Profile_Form> {
                   children: _commonAllergies.map((allergy) {
                     bool isSelected = _allergies.contains(allergy);
                     return ChoiceChip(
-                      selectedColor: Color(0xFF749BC2),
+                      selectedColor: const Color(0xFF749BC2),
                       label: Text(allergy),
                       selected: isSelected,
                       onSelected: (selected) {
@@ -190,9 +190,9 @@ class _Profile_FormState extends State<Profile_Form> {
                   height: 10,
                 ),
                 ListTile(
-                  shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
-                  leading: Icon(Icons.add),
-                  title: Text("Other"),
+                  shape: RoundedRectangleBorder(side: const BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
+                  leading: const Icon(Icons.add),
+                  title: const Text("Other"),
                   onTap: () {
                     _showCustomDialog(title: "Add Allergy", labelText: "Allergy Name", listToUpdate: _allergies, suggestionList: _commonAllergies);
                   },
@@ -200,7 +200,7 @@ class _Profile_FormState extends State<Profile_Form> {
                 const SizedBox(
                   height: 20,
                 ),
-                Text(" Dietary Preferences", style: TextStyle(color: Colors.black, fontSize: 15),),
+                const Text(" Dietary Preferences", style: TextStyle(color: Colors.black, fontSize: 15),),
                 const SizedBox(height: 9,),
                 Wrap(
                   runSpacing: 8,
@@ -208,7 +208,7 @@ class _Profile_FormState extends State<Profile_Form> {
                   children: _dietarySuggestions.map((preference){
                     bool isPrefSel = _dietaryPref.contains(preference);
                     return ChoiceChip(
-                      selectedColor: Color(0xFF749BC2),
+                      selectedColor: const Color(0xFF749BC2),
                       label: Text(preference),
                       selected: isPrefSel,
                       onSelected: (selected){
@@ -225,9 +225,9 @@ class _Profile_FormState extends State<Profile_Form> {
                 ),
                 const SizedBox(height: 10,),
                 ListTile(
-                  shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
-                  leading: Icon(Icons.add),
-                  title: Text("Other"),
+                  shape: RoundedRectangleBorder(side: const BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
+                  leading: const Icon(Icons.add),
+                  title: const Text("Other"),
                   onTap: (){
                     _showCustomDialog(title: "Add Dietary Preference",labelText: "Dietary Preference",listToUpdate: _dietaryPref, suggestionList: _dietarySuggestions);
                   },
@@ -266,7 +266,7 @@ class _Profile_FormState extends State<Profile_Form> {
             onPressed: () {
               Navigator.pop(context);
             },
-            child: Text('Cancel'),
+            child: const Text('Cancel'),
           ),
           TextButton(
             onPressed: () {
@@ -276,7 +276,7 @@ class _Profile_FormState extends State<Profile_Form> {
               });
               Navigator.pop(context);
             },
-            child: Text('Add'),
+            child: const Text('Add'),
           ),
         ],
       );

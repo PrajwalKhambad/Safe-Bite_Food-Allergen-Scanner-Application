@@ -119,12 +119,12 @@ class _LoginFormState extends State<LoginForm> {
                               });
                               if(error.isEmpty){
                                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context){
-                                  return HomePage();
+                                  return const HomePage();
                                 }));
                               }
                             },
                             child: const Text("Login", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),)),
-                        SizedBox(
+                        const SizedBox(
                           height: 30,
                         ),
                         Row(
@@ -164,12 +164,12 @@ class _LoginFormState extends State<LoginForm> {
                               });
                               if(error.isEmpty){
                                 Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (BuildContext context){
-                                  return Profile_Form();
+                                  return const Profile_Form();
                                 }));
                               }
                             },
-                            child: Text("Sign-up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),)),
-                        SizedBox(
+                            child: const Text("Sign-up", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),)),
+                        const SizedBox(
                           height: 30,
                         ),
                         Row(

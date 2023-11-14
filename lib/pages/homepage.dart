@@ -80,10 +80,10 @@ class _HomePageState extends State<HomePage> {
                       width: 300,
                       height: 300,
                       color: Colors.grey.shade400,
-                      child: Center(
+                      child: const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
+                          children: [
                             Icon(
                               Icons.image,
                               size: 100,
@@ -166,7 +166,7 @@ class _HomePageState extends State<HomePage> {
                             color: Colors.grey.withOpacity(0.3),
                             spreadRadius: 2,
                             blurRadius: 5,
-                            offset: Offset(0, 3),
+                            offset: const Offset(0, 3),
                           ),
                         ],
                       ),
@@ -390,16 +390,16 @@ class _HomePageState extends State<HomePage> {
     final user = auth.currentUser;
     final firestore = FirebaseFirestore.instance;
 
-    List<dynamic> user_allergies = [];
+    List<dynamic> userAllergies = [];
 
     if (user != null) {
       DocumentSnapshot<Map<String, dynamic>> snapshot =
           await firestore.collection('users').doc(user.email).get();
-      user_allergies = snapshot.data()!['Allergies'];
+      userAllergies = snapshot.data()!['Allergies'];
     }
 
     for (String allergy in allergies) {
-      if (user_allergies.contains(allergy)) {
+      if (userAllergies.contains(allergy)) {
         setState(() {
           isSafe = false;
           causing = '$causing $allergy, ';

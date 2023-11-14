@@ -8,7 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:safe_bite/main.dart';
 import 'package:safe_bite/screens/login_screen.dart';
 
 void main() {

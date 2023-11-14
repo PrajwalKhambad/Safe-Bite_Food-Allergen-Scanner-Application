@@ -49,14 +49,14 @@ class _EditInfoDialogState extends State<EditInfoDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text("Cancel", style: TextStyle(color: Colors.red),),
+          child: const Text("Cancel", style: TextStyle(color: Colors.red),),
         ),
         TextButton(
           onPressed: () {
             widget.onInfoChanged(_infoController.text);
             Navigator.pop(context);
           },
-          child: Text("Confirm"),
+          child: const Text("Confirm"),
         ),
       ],
     );
@@ -91,7 +91,7 @@ class _EditNameState extends State<EditName> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: customBackgroundColor,
-      title: Text("Edit Name"),
+      title: const Text("Edit Name"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -115,7 +115,7 @@ class _EditNameState extends State<EditName> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text("Cancel", style: TextStyle(color: Colors.red),),
+          child: const Text("Cancel", style: TextStyle(color: Colors.red),),
         ),
         TextButton(
           onPressed: () {
@@ -123,7 +123,7 @@ class _EditNameState extends State<EditName> {
             widget.onNameChanged(_namecontroller.text, _surnamecontroller.text);
             Navigator.pop(context);
           },
-          child: Text("Confirm"),
+          child: const Text("Confirm"),
         ),
       ],
     );

@@ -163,7 +163,7 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                               : null,
                         ),
                       ),
-                      if (isLoading) CircularProgressIndicator()
+                      if (isLoading) const CircularProgressIndicator()
                     ]),
                     const SizedBox(
                       width: 5,

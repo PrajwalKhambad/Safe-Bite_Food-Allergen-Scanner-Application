@@ -9,6 +9,7 @@ import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
 import 'package:safe_bite/pages/allergyfreemeals.dart';
 import 'package:safe_bite/pages/scan_history.dart';
+import 'package:safe_bite/pages/alternate_ingredients.dart';
 import 'package:safe_bite/themes.dart';
 
 class HomePage_Drawer extends StatefulWidget {
@@ -136,6 +137,18 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
               }));
             },
           ),
+          // ListTile(
+          //   // tileColor:const Color(0xFF91C8E4),
+          //   iconColor: Colors.black,
+          //   leading: const Icon(Icons.food_bank_outlined),
+          //   title: const Text("Substitutes"),
+          //   onTap: () {
+          //     Navigator.of(context)
+          //         .push(MaterialPageRoute(builder: (BuildContext context) {
+          //       return const SubstituteScreen();
+          //     }));
+          //   },
+          // ),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
