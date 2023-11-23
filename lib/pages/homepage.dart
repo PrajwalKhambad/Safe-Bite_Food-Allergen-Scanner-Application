@@ -31,6 +31,7 @@ class _HomePageState extends State<HomePage> {
   List<dynamic> predictedAllergies = [];
   List<String> allergies = [];
   String causing = "";
+  List<dynamic> ingredient_causing = [];
 
   final TextEditingController _savecontroller = TextEditingController();
   String nameOfProduct = '';
@@ -46,6 +47,7 @@ class _HomePageState extends State<HomePage> {
       allergies = [];
       isSafe = true;
       causing = "";
+      ingredient_causing = [];
       nameOfProduct = '';
       data = null;
       isChecked = false;
@@ -80,10 +82,10 @@ class _HomePageState extends State<HomePage> {
                       width: 300,
                       height: 300,
                       color: Colors.grey.shade400,
-                      child: const Center(
+                      child: Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
+                          children:const [
                             Icon(
                               Icons.image,
                               size: 100,
@@ -134,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     style: customElevatedButtonStyle(150, 50),
                     onPressed: () async {
-                      url = 'http://192.168.0.103:5000/api?query=$scannedText';
+                      url = 'http://192.168.0.104:5000/api?query=$scannedText';
                       data = await fetchData(url);
                       var decoded = jsonDecode(data);
                       setState(() {
@@ -149,6 +151,7 @@ class _HomePageState extends State<HomePage> {
                         }
 
                         isChecked = true;
+                        ingredient_causing = decoded['ingredients'];
                       });
                       checkIfisSafe();
                     },
@@ -218,6 +221,13 @@ class _HomePageState extends State<HomePage> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
+                                  const SizedBox(height: 8,),
+                                  Text("The allergy causing ingredient is ${ingredient_causing.join(",")}",
+                                  style:const TextStyle(
+                                      fontSize: 20,
+                                      // color: Colors.red,
+                                      fontWeight: FontWeight.bold,
+                                    ),),
                               ],
                             ),
                           )
@@ -232,7 +242,7 @@ class _HomePageState extends State<HomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          imageFile == null
+          (imageFile == null)
               ? showDialog(
                   context: context,
                   builder: ((context) {
@@ -241,6 +251,27 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(4),
                           child: Text(
                             "No scanned Image found\nFirst Scan an image",
+                            style:
+                                customTextStyle_normal.apply(color: Colors.red),
+                          )),
+                      actions: [
+                        TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text("OK"))
+                      ],
+                    );
+                  }))
+              : (!isChecked)
+              ? showDialog(
+                  context: context,
+                  builder: ((context) {
+                    return AlertDialog(
+                      content: Padding(
+                          padding: const EdgeInsets.all(4),
+                          child: Text(
+                            "First Check if the allergy is present or not",
                             style:
                                 customTextStyle_normal.apply(color: Colors.red),
                           )),
@@ -404,7 +435,6 @@ class _HomePageState extends State<HomePage> {
           isSafe = false;
           causing = '$causing $allergy, ';
         });
-        break;
       }
     }
   }

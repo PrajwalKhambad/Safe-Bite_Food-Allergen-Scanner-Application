@@ -5,11 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safe_bite/pages/aboutpage.dart';
 import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
 import 'package:safe_bite/pages/allergyfreemeals.dart';
 import 'package:safe_bite/pages/scan_history.dart';
-import 'package:safe_bite/pages/alternate_ingredients.dart';
 import 'package:safe_bite/themes.dart';
 
 class HomePage_Drawer extends StatefulWidget {
@@ -165,7 +165,11 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
             iconColor: Colors.black,
             leading: const Icon(Icons.info_outline),
             title: const Text("About"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                return const AboutPage();
+              }));
+            },
           ),
           const Divider(height: 40, color: Colors.black, indent: 10, endIndent: 10,),
           ListTile(

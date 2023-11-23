@@ -60,8 +60,8 @@ def pred_allergies():
     extracted_ingredients = extract_ingredient(text)
     ingredients_string = ', '.join(extracted_ingredients)
     d['extracted_ingredients'] = ingredients_string
-    # model = load("lib/safebite_API/edi_pipeline.joblib")
-    model = load("safe_bite/lib/safebite_API/edi_pipeline.joblib")
+    model = load("lib/safebite_API/edi_pipeline.joblib")    # prajwal
+    # model = load("safe_bite/lib/safebite_API/edi_pipeline.joblib")
     allergies = model.predict([ingredients_string])
     d['predicted_allergies'] = allergies[0].tolist()
     res=allg_ing(ingredients_string,allergies)

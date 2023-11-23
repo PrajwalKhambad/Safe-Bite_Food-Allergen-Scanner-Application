@@ -81,7 +81,6 @@ class _EditNameState extends State<EditName> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _namecontroller = TextEditingController(text: widget.currFirstName);
     _surnamecontroller =  TextEditingController(text: widget.currSurname);
@@ -141,7 +140,7 @@ class AddAllergiesDialog extends StatefulWidget {
 }
 
 class _AddAllergiesDialogState extends State<AddAllergiesDialog> {
-  List<dynamic> commonAllergens = ['Peanuts','Milk','Eggs','Wheat','Soy'];
+  List<dynamic> commonAllergens = ['Nut','Milk','Eggs','Wheat','Soy'];
   List<dynamic> selectedAllergens = [];
 
   @override

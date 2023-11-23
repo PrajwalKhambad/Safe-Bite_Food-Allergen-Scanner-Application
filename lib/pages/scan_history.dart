@@ -90,7 +90,7 @@ class _ScanHistoryState extends State<ScanHistory> {
             )
           : scanHistory.isEmpty
               ? const Center(
-                  child: Text("No scan history available"),
+                  child: Text("No scan history available", style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 20),),
                 )
               : ListView.builder(
                   itemCount: scanHistory.length,
