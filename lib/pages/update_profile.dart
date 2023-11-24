@@ -55,6 +55,7 @@ class _EditInfoDialogState extends State<EditInfoDialog> {
           onPressed: () {
             widget.onInfoChanged(_infoController.text);
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.dialogTitle} updated")));
           },
           child: const Text("Confirm"),
         ),
@@ -121,6 +122,7 @@ class _EditNameState extends State<EditName> {
             // widget.onInfoChanged(_infoController.text);
             widget.onNameChanged(_namecontroller.text, _surnamecontroller.text);
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Name updated successfuly")));
           },
           child: const Text("Confirm"),
         ),
@@ -181,6 +183,7 @@ class _AddAllergiesDialogState extends State<AddAllergiesDialog> {
         TextButton(onPressed: (){
           widget.onAllergiesUpdated(selectedAllergens);
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Allergy added")));
         }, child:const Text("Confirm"))
       ],
     );
@@ -238,6 +241,7 @@ class _AddDietaryPrefDialogState extends State<AddDietaryPrefDialog> {
         TextButton(onPressed: (){
           widget.onprefsUpdated(selectedPrefs);
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Dietary preference added")));
         }, child:const Text("Confirm"))
       ],
     );

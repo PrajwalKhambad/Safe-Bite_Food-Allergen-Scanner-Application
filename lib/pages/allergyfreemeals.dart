@@ -126,7 +126,7 @@ class _MealScreenState extends State<MealScreen> {
         future: fetchAllergenFreeMeals(),
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: Color(0xFF4682A9),));
           } else if (snapshot.hasError) {
             return Center(
                 child: Text(

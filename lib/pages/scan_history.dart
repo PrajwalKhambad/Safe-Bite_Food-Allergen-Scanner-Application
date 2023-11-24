@@ -86,7 +86,7 @@ class _ScanHistoryState extends State<ScanHistory> {
       ),
       body: isLoading
           ? const Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(color: Color(0xFF4682A9),),
             )
           : scanHistory.isEmpty
               ? const Center(

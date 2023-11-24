@@ -55,7 +55,6 @@ class _Profile_FormState extends State<Profile_Form> {
           'profileImageUrl': profilePicUrl,
           // 'Medical_Conditions' : _medicalConditions,
           // 'Pref_Cuisines' : _prefCuisines,
-          // 'PicUrl' : _profilePicUrl,
         });
       }
     }
@@ -265,6 +264,9 @@ class _Profile_FormState extends State<Profile_Form> {
                     // onPressed: _submitForm,
                     onPressed: () {
                       _submitForm();
+
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Signed-in successfully")));
+
                       Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (BuildContext context) {
                         return const HomePage();

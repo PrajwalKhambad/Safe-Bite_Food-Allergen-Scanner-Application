@@ -21,6 +21,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool textScanning = false;
+  bool checkScanning = false;
   bool isChecked = false;
   XFile? imageFile;
   String scannedText = "";
@@ -37,8 +38,8 @@ class _HomePageState extends State<HomePage> {
   String nameOfProduct = '';
   bool isSafe = true;
 
-  Future<void> handleRefresh() async {
-    await Future.delayed(const Duration(seconds: 2));
+  Future<void> handleRefresh(int seconds) async {
+    await Future.delayed(Duration(seconds: seconds));
     setState(() {
       textScanning = false;
       imageFile = null;
@@ -63,7 +64,9 @@ class _HomePageState extends State<HomePage> {
           style: customTextStyle_appbar,
         ),
         actions: [
-          IconButton(onPressed: handleRefresh, icon: const Icon(Icons.refresh))
+          IconButton(onPressed: (){
+            handleRefresh(2);
+          }, icon: const Icon(Icons.refresh))
         ],
       ),
       body: Container(
@@ -76,7 +79,7 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  if (textScanning) const CircularProgressIndicator(),
+                  if (textScanning) const CircularProgressIndicator(color: Color(0xFF4682A9),),
                   if (!textScanning && imageFile == null)
                     Container(
                       width: 300,
@@ -136,6 +139,10 @@ class _HomePageState extends State<HomePage> {
                   ElevatedButton(
                     style: customElevatedButtonStyle(150, 50),
                     onPressed: () async {
+                      setState(() {
+                        checkScanning= true;
+                      });
+
                       url = 'http://192.168.0.104:5000/api?query=$scannedText';
                       data = await fetchData(url);
                       var decoded = jsonDecode(data);
@@ -152,14 +159,15 @@ class _HomePageState extends State<HomePage> {
 
                         isChecked = true;
                         ingredient_causing = decoded['ingredients'];
+                        checkScanning = false;
                       });
                       checkIfisSafe();
                     },
                     child: const Text("Check"),
                   ),
                   const SizedBox(height: 20,),
-                  if (isChecked)
-                    Container(
+                  isChecked
+                  ? Container(
                       padding:const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         color:const Color(0xFF749BC2),
@@ -234,6 +242,8 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     )
+                    : checkScanning ? const CircularProgressIndicator(color: Color(0xFF4682A9),)
+                                    : Container()
                 ],
               ),
             ),
@@ -314,6 +324,7 @@ class _HomePageState extends State<HomePage> {
                               save_scan_toFirebase();
                               _savecontroller.text = '';
                               Navigator.of(context).pop();
+                              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Scan saved successfulyy")));
                             },
                             child: const Text("Save"))
                       ],
@@ -405,12 +416,9 @@ class _HomePageState extends State<HomePage> {
         });
       }
 
-      // setState(() {
-      //   textScanning = false;
-      //   imageFile = null;
-      //   scannedText = '';
-      // });
-      handleRefresh();
+      setState(() {
+        handleRefresh(0);
+      });
     } catch (e) {
       print("Error saving scan: $e");
     }
