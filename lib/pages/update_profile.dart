@@ -49,14 +49,15 @@ class _EditInfoDialogState extends State<EditInfoDialog> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text("Cancel", style: TextStyle(color: Colors.red),),
+          child: const Text("Cancel", style: TextStyle(color: Colors.red),),
         ),
         TextButton(
           onPressed: () {
             widget.onInfoChanged(_infoController.text);
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("${widget.dialogTitle} updated")));
           },
-          child: Text("Confirm"),
+          child: const Text("Confirm"),
         ),
       ],
     );
@@ -81,7 +82,6 @@ class _EditNameState extends State<EditName> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _namecontroller = TextEditingController(text: widget.currFirstName);
     _surnamecontroller =  TextEditingController(text: widget.currSurname);
@@ -91,7 +91,7 @@ class _EditNameState extends State<EditName> {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: customBackgroundColor,
-      title: Text("Edit Name"),
+      title: const Text("Edit Name"),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -115,15 +115,16 @@ class _EditNameState extends State<EditName> {
           onPressed: () {
             Navigator.pop(context);
           },
-          child: Text("Cancel", style: TextStyle(color: Colors.red),),
+          child: const Text("Cancel", style: TextStyle(color: Colors.red),),
         ),
         TextButton(
           onPressed: () {
             // widget.onInfoChanged(_infoController.text);
             widget.onNameChanged(_namecontroller.text, _surnamecontroller.text);
             Navigator.pop(context);
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Name updated successfuly")));
           },
-          child: Text("Confirm"),
+          child: const Text("Confirm"),
         ),
       ],
     );
@@ -141,7 +142,7 @@ class AddAllergiesDialog extends StatefulWidget {
 }
 
 class _AddAllergiesDialogState extends State<AddAllergiesDialog> {
-  List<dynamic> commonAllergens = ['Peanuts','Milk','Eggs','Wheat','Soy'];
+  List<dynamic> commonAllergens = ['Nut','Milk','Eggs','Wheat','Soy'];
   List<dynamic> selectedAllergens = [];
 
   @override
@@ -182,6 +183,7 @@ class _AddAllergiesDialogState extends State<AddAllergiesDialog> {
         TextButton(onPressed: (){
           widget.onAllergiesUpdated(selectedAllergens);
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Allergy added")));
         }, child:const Text("Confirm"))
       ],
     );
@@ -239,6 +241,7 @@ class _AddDietaryPrefDialogState extends State<AddDietaryPrefDialog> {
         TextButton(onPressed: (){
           widget.onprefsUpdated(selectedPrefs);
           Navigator.of(context).pop();
+          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Dietary preference added")));
         }, child:const Text("Confirm"))
       ],
     );

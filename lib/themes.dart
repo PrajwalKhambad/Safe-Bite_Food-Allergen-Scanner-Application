@@ -6,7 +6,7 @@ Color customBackgroundColor =const Color(0xFFF6F4EB);
 // Button style
 ButtonStyle customElevatedButtonStyle(double width, double height){
   return ElevatedButton.styleFrom(
-    backgroundColor: Color(0xFF749BC2),
+    backgroundColor: const Color(0xFF749BC2),
     foregroundColor: Colors.white,
     elevation: 8,
     padding:const EdgeInsets.symmetric(horizontal: 16),
@@ -40,7 +40,7 @@ TextStyle customTextStyle_appbar = const TextStyle(
 );
 
 // Text style theme
-TextStyle customTextStyle_normal = TextStyle(
+TextStyle customTextStyle_normal = const TextStyle(
   fontSize: 15,
   fontWeight: FontWeight.bold,
   color: Color(0xFFF6F4EB),

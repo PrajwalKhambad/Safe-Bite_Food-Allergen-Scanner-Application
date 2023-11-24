@@ -126,7 +126,7 @@ class _MealScreenState extends State<MealScreen> {
         future: fetchAllergenFreeMeals(),
         builder: ((context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator(color: Color(0xFF4682A9),));
           } else if (snapshot.hasError) {
             return Center(
                 child: Text(
@@ -137,16 +137,17 @@ class _MealScreenState extends State<MealScreen> {
             return Column(
               children: [
                 Card(
-                  margin:const EdgeInsets.all(12),
+                  margin: const EdgeInsets.only(bottom: 12, top: 10),
                   child: Container(
-                      padding: const EdgeInsets.all(8),
-                      color: customBackgroundColor,
+                      padding: const EdgeInsets.all(16),
+                      color: const Color(0xFF749BC2),
                       width: double.infinity,
+                      height: 90,
                       child: Center(
                           child: Text(
                         "The below meals do not contain: ${userAllergies.join(', ')}",
                         style:
-                            customTextStyle_normal.apply(color: Colors.black),
+                            customTextStyle_normal.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                       ))),
                 ),
                 Expanded(

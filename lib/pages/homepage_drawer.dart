@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:safe_bite/pages/aboutpage.dart';
 import 'package:safe_bite/pages/display_profile_page.dart';
 import 'package:safe_bite/pages/login_screen.dart';
 import 'package:safe_bite/pages/allergyfreemeals.dart';
@@ -136,13 +137,26 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
               }));
             },
           ),
+          // ListTile(
+          //   // tileColor:const Color(0xFF91C8E4),
+          //   iconColor: Colors.black,
+          //   leading: const Icon(Icons.food_bank_outlined),
+          //   title: const Text("Substitutes"),
+          //   onTap: () {
+          //     Navigator.of(context)
+          //         .push(MaterialPageRoute(builder: (BuildContext context) {
+          //       return const SubstituteScreen();
+          //     }));
+          //   },
+          // ),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
             leading: const Icon(Icons.history),
             title: const Text("Scans History"),
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
                 return const ScanHistory();
               }));
             },
@@ -152,9 +166,19 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
             iconColor: Colors.black,
             leading: const Icon(Icons.info_outline),
             title: const Text("About"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                return const AboutPage();
+              }));
+            },
           ),
-          const Divider(height: 40, color: Colors.black, indent: 10, endIndent: 10,),
+          const Divider(
+            height: 40,
+            color: Colors.black,
+            indent: 10,
+            endIndent: 10,
+          ),
           ListTile(
             // tileColor:const Color(0xFF91C8E4),
             iconColor: Colors.black,
@@ -179,11 +203,13 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
                         TextButton(
                             onPressed: () {
                               logout();
-                              Navigator.pushReplacement(context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) {
-                                return const LoginForm();
-                              }));
+                              setState(() {
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                  return const LoginForm();
+                                }));
+                              });
                             },
                             child: const Text("Logout"))
                       ],
@@ -214,7 +240,7 @@ class _HomePage_DrawerState extends State<HomePage_Drawer> {
                           )),
                       TextButton(
                           onPressed: () {
-                            exit;
+                            exit(0);
                           },
                           child: const Text("Exit"))
                     ],

@@ -163,7 +163,7 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                               : null,
                         ),
                       ),
-                      if (isLoading) CircularProgressIndicator()
+                      if (isLoading) const CircularProgressIndicator(color: Color(0xFF4682A9),)
                     ]),
                     const SizedBox(
                       width: 5,
@@ -172,6 +172,7 @@ class _My_Profile_PageState extends State<My_Profile_Page> {
                         color: const Color(0xFF749BC2),
                         onPressed: () {
                           pick_and_uploadImage();
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Image updated")));
                         },
                         icon: const Icon(Icons.edit))
                   ],

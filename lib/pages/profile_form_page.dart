@@ -23,14 +23,19 @@ class _Profile_FormState extends State<Profile_Form> {
   String profilePicUrl = "";
 
   final List<String> _allergies = [];
-  final List<String> _commonAllergies = ['Peanuts','Milk','Eggs','Wheat','Soy'];
+  final List<String> _commonAllergies = ['Nut', 'Milk', 'Eggs', 'Wheat', 'Soy'];
 
   final List<String> _dietaryPref = [];
-  final List<String> _dietarySuggestions = ['Vegetarian','Vegan','Gluten-free','Low-carb','Paleo'];
+  final List<String> _dietarySuggestions = [
+    'Vegetarian',
+    'Vegan',
+    'Gluten-free',
+    'Low-carb',
+    'Paleo'
+  ];
 
   // String _medicalConditions = "";
   // String _prefCuisines = "";
-  // String _profilePicUrl = "";
 
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
@@ -50,13 +55,7 @@ class _Profile_FormState extends State<Profile_Form> {
           'profileImageUrl': profilePicUrl,
           // 'Medical_Conditions' : _medicalConditions,
           // 'Pref_Cuisines' : _prefCuisines,
-          // 'PicUrl' : _profilePicUrl,
         });
-
-        Navigator.of(context)
-            .pushReplacement(MaterialPageRoute(builder: (BuildContext context) {
-          return HomePage();
-        }));
       }
     }
   }
@@ -140,7 +139,7 @@ class _Profile_FormState extends State<Profile_Form> {
                       child: ListTile(
                         title: const Text("Gender"),
                         trailing: DropdownButton<String>(
-                          hint: Text("Select gender"),
+                          hint: const Text("Select gender"),
                           value: _gender,
                           onChanged: (value) {
                             setState(() {
@@ -163,15 +162,20 @@ class _Profile_FormState extends State<Profile_Form> {
                 const SizedBox(
                   height: 30,
                 ),
-                Text("  Allergies", style: TextStyle(color: Colors.black, fontSize: 15),),
-                const SizedBox(height: 9,),
+                const Text(
+                  "  Allergies",
+                  style: TextStyle(color: Colors.black, fontSize: 15),
+                ),
+                const SizedBox(
+                  height: 9,
+                ),
                 Wrap(
                   runSpacing: 4,
                   spacing: 8,
                   children: _commonAllergies.map((allergy) {
                     bool isSelected = _allergies.contains(allergy);
                     return ChoiceChip(
-                      selectedColor: Color(0xFF749BC2),
+                      selectedColor: const Color(0xFF749BC2),
                       label: Text(allergy),
                       selected: isSelected,
                       onSelected: (selected) {
@@ -190,30 +194,41 @@ class _Profile_FormState extends State<Profile_Form> {
                   height: 10,
                 ),
                 ListTile(
-                  shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
-                  leading: Icon(Icons.add),
-                  title: Text("Other"),
+                  shape: RoundedRectangleBorder(
+                      side: const BorderSide(width: 1),
+                      borderRadius: BorderRadius.circular(20)),
+                  leading: const Icon(Icons.add),
+                  title: const Text("Other"),
                   onTap: () {
-                    _showCustomDialog(title: "Add Allergy", labelText: "Allergy Name", listToUpdate: _allergies, suggestionList: _commonAllergies);
+                    _showCustomDialog(
+                        title: "Add Allergy",
+                        labelText: "Allergy Name",
+                        listToUpdate: _allergies,
+                        suggestionList: _commonAllergies);
                   },
                 ),
                 const SizedBox(
                   height: 20,
                 ),
-                Text(" Dietary Preferences", style: TextStyle(color: Colors.black, fontSize: 15),),
-                const SizedBox(height: 9,),
+                const Text(
+                  " Dietary Preferences",
+                  style: TextStyle(color: Colors.black, fontSize: 15),
+                ),
+                const SizedBox(
+                  height: 9,
+                ),
                 Wrap(
                   runSpacing: 8,
                   spacing: 8,
-                  children: _dietarySuggestions.map((preference){
+                  children: _dietarySuggestions.map((preference) {
                     bool isPrefSel = _dietaryPref.contains(preference);
                     return ChoiceChip(
-                      selectedColor: Color(0xFF749BC2),
+                      selectedColor: const Color(0xFF749BC2),
                       label: Text(preference),
                       selected: isPrefSel,
-                      onSelected: (selected){
+                      onSelected: (selected) {
                         setState(() {
-                          if(selected){
+                          if (selected) {
                             _dietaryPref.add(preference);
                           } else {
                             _dietaryPref.remove(preference);
@@ -223,13 +238,21 @@ class _Profile_FormState extends State<Profile_Form> {
                     );
                   }).toList(),
                 ),
-                const SizedBox(height: 10,),
+                const SizedBox(
+                  height: 10,
+                ),
                 ListTile(
-                  shape: RoundedRectangleBorder(side: BorderSide(width: 1),borderRadius: BorderRadius.circular(20)),
-                  leading: Icon(Icons.add),
-                  title: Text("Other"),
-                  onTap: (){
-                    _showCustomDialog(title: "Add Dietary Preference",labelText: "Dietary Preference",listToUpdate: _dietaryPref, suggestionList: _dietarySuggestions);
+                  shape: RoundedRectangleBorder(
+                      side: const BorderSide(width: 1),
+                      borderRadius: BorderRadius.circular(20)),
+                  leading: const Icon(Icons.add),
+                  title: const Text("Other"),
+                  onTap: () {
+                    _showCustomDialog(
+                        title: "Add Dietary Preference",
+                        labelText: "Dietary Preference",
+                        listToUpdate: _dietaryPref,
+                        suggestionList: _dietarySuggestions);
                   },
                 ),
                 // Implement medical conditions, pref cuisines and profile pic url here if required
@@ -238,7 +261,17 @@ class _Profile_FormState extends State<Profile_Form> {
                 ),
                 ElevatedButton(
                     style: customElevatedButtonStyle(140, 40),
-                    onPressed: _submitForm,
+                    // onPressed: _submitForm,
+                    onPressed: () {
+                      _submitForm();
+
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Signed-in successfully")));
+
+                      Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return const HomePage();
+                      }));
+                    },
                     child: const Text("Submit")),
               ],
             ),
@@ -247,40 +280,44 @@ class _Profile_FormState extends State<Profile_Form> {
       ),
     );
   }
-  
-  void _showCustomDialog({required String title,required String labelText,required List<String> listToUpdate, required List<String> suggestionList}) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      String customValue = '';
-      return AlertDialog(
-        title: Text(title),
-        content: TextField(
-          onChanged: (value) {
-            customValue = value;
-          },
-          decoration: InputDecoration(labelText: labelText),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
+
+  void _showCustomDialog(
+      {required String title,
+      required String labelText,
+      required List<String> listToUpdate,
+      required List<String> suggestionList}) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        String customValue = '';
+        return AlertDialog(
+          title: Text(title),
+          content: TextField(
+            onChanged: (value) {
+              customValue = value;
             },
-            child: Text('Cancel'),
+            decoration: InputDecoration(labelText: labelText),
           ),
-          TextButton(
-            onPressed: () {
-              setState(() {
-                listToUpdate.add(customValue);
-                suggestionList.add(customValue);                
-              });
-              Navigator.pop(context);
-            },
-            child: Text('Add'),
-          ),
-        ],
-      );
-    },
-  );
-}
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  listToUpdate.add(customValue);
+                  suggestionList.add(customValue);
+                });
+                Navigator.pop(context);
+              },
+              child: const Text('Add'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
